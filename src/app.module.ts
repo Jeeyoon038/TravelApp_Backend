@@ -24,6 +24,7 @@ import { AuthModule } from './auth/auth.module';
     TripsModule,
     ImageMetadataModule,
     UploadModule,
+    
   ],
 })
 export class AppModule {}

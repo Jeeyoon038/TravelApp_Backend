@@ -16,10 +16,14 @@ export class TripsService {
     return createdTrip.save();
   }
 
+
+  //모든 여행 데이터 가져오기기
   async findAll(): Promise<Trip[]> {
     return this.tripModel.find().exec();
   }
 
+
+  //ID로 특정 여행 데이터 가져오기기
   async findOne(trip_id: number): Promise<Trip> {
     return this.tripModel.findOne({ trip_id }).exec();
   }

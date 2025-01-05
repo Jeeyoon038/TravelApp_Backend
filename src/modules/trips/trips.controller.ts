@@ -12,6 +12,11 @@ import * as AWS from '@aws-sdk/client-s3';
 export class TripsController {
   constructor(private readonly tripsService: TripsService) {}
 
+  @Get()
+  async findAll() {
+    return await this.tripsService.findAll();
+  }
+
   // @Post()
   // async create(@Body() createTripDto: CreateTripDto): Promise<Trip> {
   //   return this.tripsService.create(createTripDto);
@@ -38,11 +43,10 @@ export class TripsController {
     console.log('Received trip data:', createTripDto);  // Log the received data (check files URL)
     return this.tripsService.create(createTripDto);
   }
-  @Get()
-  async findAll(): Promise<Trip[]> {
-    return this.tripsService.findAll();
-  }
+ 
 
+
+  //여행 데이터 하나 가져오기 (Id로 조회)
   @Get(':id')
   async findOne(@Param('id') id: number): Promise<Trip> {
     return this.tripsService.findOne(id);
