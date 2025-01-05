@@ -23,7 +23,7 @@ export class AuthService {
         googleUser = new this.googleUserModel({
           googleId: user.googleId,
           email: user.email,
-          name: user.name,
+          displayName: user.displayName,
           profilePicture: user.profilePicture
         });
         await googleUser.save();
@@ -33,7 +33,7 @@ export class AuthService {
       const payload = { 
         sub: googleUser._id, 
         email: googleUser.email, 
-        name: googleUser.name 
+        displayName: googleUser.displayName 
       };
 
       const access_token = this.jwtService.sign(payload);
@@ -43,7 +43,7 @@ export class AuthService {
         user: {
           googleId: googleUser.googleId,
           email: googleUser.email,
-          name: googleUser.name,
+          name: googleUser.displayName,
           profilePicture: googleUser.profilePicture
         }
       };

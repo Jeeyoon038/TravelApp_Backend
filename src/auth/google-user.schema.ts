@@ -12,7 +12,10 @@ export class GoogleUser {
   email: string;
 
   @Prop({ required: true })
-  name: string;
+  displayName: string;
+
+  // @Prop({ required: true })
+  // name: string;
 
   @Prop()
   profilePicture: string;
