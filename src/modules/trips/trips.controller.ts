@@ -1,5 +1,5 @@
 // src/modules/trips/trips.controller.ts
-import { Controller, Get, Post, Body, Param, Delete, Put, UseInterceptors, UploadedFiles } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Delete, Put, UseInterceptors, UploadedFiles, Patch } from '@nestjs/common';
 import { TripsService } from './trips.service';
 import { CreateTripDto } from './dto/create-trip.dto';
 import { Trip } from './schemas/trip.schema';
@@ -45,6 +45,12 @@ export class TripsController {
   @Get(':id')
   async findOne(@Param('id') id: number): Promise<Trip> {
     return this.tripsService.findOne(id);
+  }
+
+  @Patch(':tripId/add-member')
+  async addMember(@Param('tripId') tripId: string, @Body() body: { googleEmail: string }) {
+    const { googleEmail } = body;
+    return this.tripsService.addMember(tripId, googleEmail);
   }
 
 }
