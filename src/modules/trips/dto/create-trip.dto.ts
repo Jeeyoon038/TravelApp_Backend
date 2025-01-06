@@ -1,24 +1,23 @@
 // src/modules/trips/dto/create-trip.dto.ts
-import { IsNotEmpty, IsString, IsDate, IsOptional, IsArray } from 'class-validator';
+import { IsNotEmpty, IsString, IsDate, IsOptional, IsArray, IsDateString } from 'class-validator';
 
 export class CreateTripDto {
-  @IsNotEmpty()
+ 
   @IsString()
   title: string;
 
+  @IsDateString()
   @IsNotEmpty()
-  start_date: Date;  // Allow both string and Date
+  start_date: string;  // Allow both string and Date
 
-  @IsNotEmpty()
-  end_date: Date;    // Allow both string and Date
+  @IsDateString()
+  end_date: string;
 
-  @IsOptional()
   @IsArray()
   @IsString({ each: true })
-  image_urls?: string[];
+  image_urls: string[];
 
-  @IsOptional()
   @IsArray()
   @IsString({ each: true })
-  member_google_ids?: string[];
+  member_google_ids: string[];
 }

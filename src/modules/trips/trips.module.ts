@@ -12,5 +12,6 @@ import { GoogleUserModule } from '../google-user/google-user.module';
   ],
   controllers: [TripsController],
   providers: [TripsService],
+  exports: [TripsService]
 })
 export class TripsModule {}

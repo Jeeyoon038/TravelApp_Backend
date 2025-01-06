@@ -43,7 +43,7 @@ export class TripsController {
 
   //여행 데이터 하나 가져오기 (Id로 조회)
   @Get(':id')
-  async findOne(@Param('id') id: number): Promise<Trip> {
+  async findOne(@Param('id') id: string): Promise<Trip> {
     return this.tripsService.findOne(id);
   }
 

@@ -1,6 +1,7 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import * as dotenv from 'dotenv';
+import { ValidationPipe } from '@nestjs/common';
 
 dotenv.config();
 
@@ -16,6 +17,11 @@ async function bootstrap() {
     credentials: true,
     //allowedHeaders: 'Content-Type, Authorization',
   });
+  
+  app.useGlobalPipes(new ValidationPipe({
+    transform: true,
+    whitelist: true,
+  }));
 
   await app.listen(3000);
   console.log('Application is running on port 3000');
