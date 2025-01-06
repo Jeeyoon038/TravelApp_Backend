@@ -1,11 +1,8 @@
 // src/modules/trips/trips.controller.ts
-import { Controller, Get, Post, Body, Param, Delete, Put, UseInterceptors, UploadedFiles, Patch } from '@nestjs/common';
-import { TripsService } from './trips.service';
+import { Body, Controller, Get, Param, Patch, Post } from '@nestjs/common';
 import { CreateTripDto } from './dto/create-trip.dto';
 import { Trip } from './schemas/trip.schema';
-import { FilesInterceptor } from '@nestjs/platform-express';
-import { s3Client } from '../../config/aws.config';
-import * as AWS from '@aws-sdk/client-s3';
+import { TripsService } from './trips.service';
 
 
 @Controller('trips')
@@ -24,6 +21,31 @@ export class TripsController {
     } catch (error) {
       console.error('Error in findAll controller:', error);
       throw error;
+    }
+  }
+  @Get(':tripId/metadata')
+  async getTripMetadata(@Param('tripId') tripId: number) {
+    try {
+      // 1. tripId로 Trip 정보 가져오기
+      const trip = await this.tripsService.findOne(tripId);
+      if (!trip) {
+        throw new BadRequestException('Trip not found');
+      }
+
+      // 2. Trip의 image_urls를 기반으로 메타데이터 조회
+      const metadata = await Promise.all(
+        trip.image_urls.map((url) =>
+          this.imageMetadataService.findByImageUrl(url),
+        ),
+      );
+
+      return {
+        trip,
+        metadata: metadata.filter((meta) => meta !== null), // 유효한 메타데이터만 반환
+      };
+    } catch (error) {
+      console.error('Error fetching trip metadata:', error);
+      throw new BadRequestException('Failed to fetch trip metadata');
     }
   }
 

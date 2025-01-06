@@ -3,14 +3,19 @@
 import { BadRequestException, ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { ImageMetadata, ImageMetadataDocument } from './schemas/image-metadata.schema';
 import { CreateImageMetadataDto } from './dto/create-image-metadata.dto';
+import { ImageMetadata, ImageMetadataDocument } from './schemas/image-metadata.schema';
 
 @Injectable()
 export class ImageMetadataService {
   constructor(
-    @InjectModel(ImageMetadata.name) private imageMetadataModel: Model<ImageMetadataDocument>,
+    @InjectModel(ImageMetadata.name)
+    private readonly imageMetadataModel: Model<ImageMetadataDocument>,
   ) {}
+
+  async findByImageUrl(imageUrl: string): Promise<ImageMetadata | null> {
+    return this.imageMetadataModel.findOne({ image_url: imageUrl }).exec();
+  }
 
   async create(createImageMetadataDto: CreateImageMetadataDto): Promise<ImageMetadata> {
     try {
