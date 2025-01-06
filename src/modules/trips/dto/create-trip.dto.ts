@@ -7,12 +7,10 @@ export class CreateTripDto {
   title: string;
 
   @IsNotEmpty()
-  @IsDate()
-  start_date: Date;
+  start_date: string | Date;  // Allow both string and Date
 
   @IsNotEmpty()
-  @IsDate()
-  end_date: Date;
+  end_date: string | Date;    // Allow both string and Date
 
   @IsOptional()
   @IsArray()
@@ -23,5 +21,4 @@ export class CreateTripDto {
   @IsArray()
   @IsString({ each: true })
   member_google_ids?: string[];
-  
 }
