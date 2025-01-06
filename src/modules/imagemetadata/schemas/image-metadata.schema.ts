@@ -1,44 +1,48 @@
-// src/modules/image-metadata/schemas/image-metadata.schema.ts
-
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document } from 'mongoose';
+import { Document, Schema as MongooseSchema } from 'mongoose';
+import { v4 as uuidv4 } from 'uuid';
 
-export type ImageMetadataDocument = ImageMetadata & Document;
+export type ImageDocument = Image & Document;
 
 @Schema({ timestamps: true })
-export class ImageMetadata {
-  @Prop({ required: false })
-  latitude: number | null;
-
-  @Prop({ required: false })
-  longitude: number | null;
-
-  @Prop({ required: false })
-  taken_at: Date | null;
-
-  @Prop({ required: false })
-  image_url: string | null;
-
-  @Prop({ required: false })
-  displaySrc: string | null;
-
-  @Prop({ required: true, unique: true })
+export class Image {
+  @Prop({ 
+    type: String, 
+    required: true, 
+    unique: true,
+    default: () => `img_${uuidv4()}`  // Auto-generate image_id
+  })
   image_id: string;
 
-  @Prop({ required: false })
+  @Prop({ type: String, ref: 'Trip', required: true })
+  trip_id: string;
+
+  @Prop({ required: true })
+  image_url: string;
+
+  @Prop({ type: Number, default: null })
+  latitude: number | null;
+
+  @Prop({ type: Number, default: null })
+  longitude: number | null;
+
+  @Prop({ type: Date, default: null })
+  taken_at: Date | null;
+
+  @Prop({ type: String, default: null })
   country: string | null;
 
-  @Prop({ required: false })
+  @Prop({ type: String, default: null })
   city: string | null;
 
-  @Prop({ required: false })
+  @Prop({ type: String, default: null })
   state: string | null;
 
-  @Prop({ required: false })
-  postalCode: string | null;
+  @Prop({ type: String, default: null })
+  postal_code: string | null;
 
-  @Prop({ required: false })
+  @Prop({ type: String, default: null })
   street: string | null;
 }
 
-export const ImageMetadataSchema = SchemaFactory.createForClass(ImageMetadata);
+export const ImageSchema = SchemaFactory.createForClass(Image);
