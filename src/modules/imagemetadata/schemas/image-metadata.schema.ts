@@ -14,13 +14,31 @@ export class ImageMetadata {
   longitude: number | null;
 
   @Prop({ required: false })
-  taken_at: string | null;
+  taken_at: Date | null;
 
-  @Prop({ required: true })
-  image_url: string;
+  @Prop({ required: false })
+  image_url: string | null;
+
+  @Prop({ required: false })
+  displaySrc: string | null;
 
   @Prop({ required: true, unique: true })
   image_id: string;
+
+  @Prop({ required: false })
+  country: string | null;
+
+  @Prop({ required: false })
+  city: string | null;
+
+  @Prop({ required: false })
+  state: string | null;
+
+  @Prop({ required: false })
+  postalCode: string | null;
+
+  @Prop({ required: false })
+  street: string | null;
 }
 
 export const ImageMetadataSchema = SchemaFactory.createForClass(ImageMetadata);

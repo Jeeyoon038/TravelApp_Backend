@@ -7,11 +7,15 @@ import { ImageMetadataModule } from './modules/imagemetadata/image-metadata.modu
 import { UploadModule } from './modules/uploadImage/upload.module';
 import { AuthModule } from './auth/auth.module';
 import { GoogleUserModule } from './modules/google-user/google-user.module';
+import { MulterModule } from '@nestjs/platform-express';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
+    }),
+    MulterModule.register({
+      dest: './uploads',
     }),
     MongooseModule.forRootAsync({
       imports: [ConfigModule],

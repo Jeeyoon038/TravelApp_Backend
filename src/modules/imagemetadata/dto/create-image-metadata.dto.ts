@@ -12,13 +12,37 @@ export class CreateImageMetadataDto {
   longitude: number | null;
 
   @IsOptional()
-  @IsDateString()
-  taken_at: string | null; // ISO string
+  taken_at: Date | null; // ISO string
 
+  @IsOptional()
   @IsString()
   @IsUrl()
-  image_url: string;
+  image_url: string | null;
+
+  @IsOptional()
+  @IsString()
+  displaySrc: string | null;
 
   @IsString()
   image_id: string;
+
+  @IsOptional()
+  @IsString()
+  country: string | null;
+
+  @IsOptional()
+  @IsString()
+  city: string | null;
+
+  @IsOptional()
+  @IsString()
+  state: string | null;
+
+  @IsOptional()
+  @IsString()
+  postalCode: string | null;
+
+  @IsOptional()
+  @IsString()
+  street: string | null;
 }

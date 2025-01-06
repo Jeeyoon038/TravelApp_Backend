@@ -7,10 +7,10 @@ export class CreateTripDto {
   title: string;
 
   @IsNotEmpty()
-  start_date: string | Date;  // Allow both string and Date
+  start_date: Date;  // Allow both string and Date
 
   @IsNotEmpty()
-  end_date: string | Date;    // Allow both string and Date
+  end_date: Date;    // Allow both string and Date
 
   @IsOptional()
   @IsArray()
