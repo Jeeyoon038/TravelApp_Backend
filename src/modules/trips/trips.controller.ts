@@ -10,33 +10,28 @@ import * as AWS from '@aws-sdk/client-s3';
 
 @Controller('trips')
 export class TripsController {
-  constructor(private readonly tripsService: TripsService) {}
+  constructor(private readonly tripsService: TripsService) {
+    console.log('TripsController initialized');
+  }
 
   @Get()
   async findAll() {
-    return await this.tripsService.findAll();
+    console.log('GET /trips endpoint hit');
+    try {
+      const trips = await this.tripsService.findAll();
+      console.log('Successfully retrieved trips:', trips);
+      return trips;
+    } catch (error) {
+      console.error('Error in findAll controller:', error);
+      throw error;
+    }
   }
 
-  // @Post()
-  // async create(@Body() createTripDto: CreateTripDto): Promise<Trip> {
-  //   return this.tripsService.create(createTripDto);
-  // }
-
-  // @Post()
-  // @UseInterceptors(FilesInterceptor('files', 10))  // 'files' is the field name for the file input
-  // async create(@Body() createTripDto: CreateTripDto, @UploadedFiles() files: Express.Multer.File[]) {
-  //   if (!files || files.length === 0) {
-  //     // Handle case where no files are uploaded
-  //     console.log("No files uploaded");
-  //     return { message: "No files uploaded" };
-  //   }
-
-  //   // Process files and form data
-  //   const filePaths = files.map(file => file.path);  // Extract the file paths
-  //   const tripData = { ...createTripDto, files: filePaths };  // Attach file paths to the DTO
-
-  //   return this.tripsService.create(tripData);  // Call the service to save the trip
-  // }
+  @Get('test')
+  test() {
+    console.log('Test endpoint hit');
+    return { message: 'Trips endpoint is working' };
+  }
 
   @Post()
   async create(@Body() createTripDto: CreateTripDto) {
@@ -51,17 +46,5 @@ export class TripsController {
   async findOne(@Param('id') id: number): Promise<Trip> {
     return this.tripsService.findOne(id);
   }
-
-
-
-//   @Post('test/create')
-//   async testCreate() {
-//   const testTrip = {
-//     title: "Test Trip",
-//     start_date: new Date("2025-01-01"),
-//     end_date: new Date("2025-01-07")
-//   };
-//   return this.tripsService.create(testTrip);
-// }
 
 }

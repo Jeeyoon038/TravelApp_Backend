@@ -1,4 +1,5 @@
 // src/modules/image-metadata/image-metadata.module.ts
+
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { ImageMetadataController } from './image-metadata.controller';
@@ -7,9 +8,10 @@ import { ImageMetadata, ImageMetadataSchema } from './schemas/image-metadata.sch
 
 @Module({
   imports: [
-    MongooseModule.forFeature([{ name: ImageMetadata.name, schema: ImageMetadataSchema }])
+    MongooseModule.forFeature([{ name: ImageMetadata.name, schema: ImageMetadataSchema }]),
   ],
   controllers: [ImageMetadataController],
   providers: [ImageMetadataService],
+  exports: [ImageMetadataService], // Export if needed elsewhere
 })
 export class ImageMetadataModule {}

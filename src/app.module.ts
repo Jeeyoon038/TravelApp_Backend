@@ -14,16 +14,21 @@ import { AuthModule } from './auth/auth.module';
     }),
     MongooseModule.forRootAsync({
       imports: [ConfigModule],
-      useFactory: (configService: ConfigService) => ({
-        uri: configService.get<string>('MONGODB_URI'),
-      }),
+      useFactory: (configService: ConfigService) => {
+        const uri = configService.get<string>('MONGODB_URI');
+        console.log('Connecting to MongoDB at:', uri);
+        return { uri };
+      },
       inject: [ConfigService],
     }),
+    
     AuthModule,
     UsersModule,
     TripsModule,
     ImageMetadataModule,
     UploadModule,
+    ImageMetadataModule
+    
     
   ],
 })

@@ -1,21 +1,24 @@
 // src/modules/image-metadata/dto/create-image-metadata.dto.ts
-import { IsNotEmpty, IsNumber, IsDate, IsString, IsUrl } from 'class-validator';
+
+import { IsNumber, IsOptional, IsString, IsUrl, IsDateString } from 'class-validator';
 
 export class CreateImageMetadataDto {
-  @IsNotEmpty()
+  @IsOptional()
   @IsNumber()
-  latitude: number;
+  latitude: number | null;
 
-  @IsNotEmpty()
+  @IsOptional()
   @IsNumber()
-  longitude: number;
+  longitude: number | null;
 
-  @IsNotEmpty()
-  @IsDate()
-  taken_at: Date;
+  @IsOptional()
+  @IsDateString()
+  taken_at: string | null; // ISO string
 
-  @IsNotEmpty()
   @IsString()
-  @IsUrl()  // URL 형식 검증
+  @IsUrl()
   image_url: string;
+
+  @IsString()
+  image_id: string;
 }
