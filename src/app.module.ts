@@ -6,6 +6,7 @@ import { TripsModule } from './modules/trips/trips.module';
 import { ImageMetadataModule } from './modules/imagemetadata/image-metadata.module';
 import { UploadModule } from './modules/uploadImage/upload.module';
 import { AuthModule } from './auth/auth.module';
+import { GoogleUserModule } from './modules/google-user/google-user.module';
 
 @Module({
   imports: [
@@ -27,7 +28,8 @@ import { AuthModule } from './auth/auth.module';
     TripsModule,
     ImageMetadataModule,
     UploadModule,
-    ImageMetadataModule
+    ImageMetadataModule,
+    GoogleUserModule
     
     
   ],
