@@ -17,16 +17,14 @@ const common_1 = require("@nestjs/common");
 const mongoose_1 = require("@nestjs/mongoose");
 const mongoose_2 = require("mongoose");
 const trip_schema_1 = require("../trips/schemas/trip.schema");
-const user_schema_1 = require("../users/schemas/user.schema");
 const diary_schema_1 = require("./schemas/diary.schema");
 let DiaryService = class DiaryService {
-    constructor(diaryModel, tripModel, userModel) {
+    constructor(diaryModel, tripModel) {
         this.diaryModel = diaryModel;
         this.tripModel = tripModel;
-        this.userModel = userModel;
     }
     async findAllDiaries() {
-        return this.diaryModel.find().populate('author').exec();
+        return this.diaryModel.find().exec();
     }
     async findAllDiariesForTrip(tripId) {
         if (!mongoose_2.Types.ObjectId.isValid(tripId)) {
@@ -36,10 +34,10 @@ let DiaryService = class DiaryService {
         if (!tripExists) {
             throw new common_1.NotFoundException(`Trip with id ${tripId} not found`);
         }
-        return this.diaryModel.find({ trip_id: tripId }).populate('author').exec();
+        return this.diaryModel.find({ trip_id: tripId }).exec();
     }
     async createDiary(createDiaryDto) {
-        const { trip_id, date, content, author } = createDiaryDto;
+        const { trip_id, date, content } = createDiaryDto;
         if (!mongoose_2.Types.ObjectId.isValid(trip_id)) {
             throw new common_1.NotFoundException(`Trip with id ${trip_id} not found`);
         }
@@ -47,18 +45,11 @@ let DiaryService = class DiaryService {
         if (!tripExists) {
             throw new common_1.NotFoundException(`Trip with id ${trip_id} not found`);
         }
-        if (!mongoose_2.Types.ObjectId.isValid(author)) {
-            throw new common_1.NotFoundException(`User with id ${author} not found`);
-        }
-        const userExists = await this.userModel.exists({ _id: author });
-        if (!userExists) {
-            throw new common_1.NotFoundException(`User with id ${author} not found`);
-        }
         const existingDiary = await this.diaryModel.findOne({ trip_id, date }).exec();
         if (existingDiary) {
             throw new common_1.BadRequestException(`Diary for date ${date} already exists for this trip`);
         }
-        const createdDiary = new this.diaryModel({ trip_id, date, content, author });
+        const createdDiary = new this.diaryModel({ trip_id, date, content });
         return createdDiary.save();
     }
     async updateDiary(tripId, diaryId, updateDiaryDto) {
@@ -72,7 +63,7 @@ let DiaryService = class DiaryService {
         if (!tripExists) {
             throw new common_1.NotFoundException(`Trip with id ${tripId} not found`);
         }
-        const updatedDiary = await this.diaryModel.findOneAndUpdate({ _id: diaryId, trip_id: tripId }, { content: updateDiaryDto.content }, { new: true }).populate('author').exec();
+        const updatedDiary = await this.diaryModel.findOneAndUpdate({ _id: diaryId, trip_id: tripId }, { content: updateDiaryDto.content }, { new: true }).exec();
         if (!updatedDiary) {
             throw new common_1.NotFoundException(`Diary with id ${diaryId} for trip ${tripId} not found`);
         }
@@ -84,9 +75,7 @@ exports.DiaryService = DiaryService = __decorate([
     (0, common_1.Injectable)(),
     __param(0, (0, mongoose_1.InjectModel)(diary_schema_1.Diary.name)),
     __param(1, (0, mongoose_1.InjectModel)(trip_schema_1.Trip.name)),
-    __param(2, (0, mongoose_1.InjectModel)(user_schema_1.User.name)),
     __metadata("design:paramtypes", [mongoose_2.Model,
-        mongoose_2.Model,
         mongoose_2.Model])
 ], DiaryService);
 //# sourceMappingURL=diary.service.js.map
