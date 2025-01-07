@@ -30,9 +30,4 @@ __decorate([
     (0, class_validator_1.IsString)(),
     __metadata("design:type", String)
 ], CreateDiaryDto.prototype, "content", void 0);
-__decorate([
-    (0, class_validator_1.IsNotEmpty)(),
-    (0, class_validator_1.IsMongoId)(),
-    __metadata("design:type", String)
-], CreateDiaryDto.prototype, "author", void 0);
 //# sourceMappingURL=create-diary.dto.js.map
