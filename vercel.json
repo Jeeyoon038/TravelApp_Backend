@@ -1,16 +1,31 @@
 {
     "version": 2,
-    
     "routes": [
+      {
+        "src": "/health",
+        "dest": "dist/main.js",
+        "methods": ["GET"]
+      },
+      {
+        "src": "/auth/(.*)",
+        "dest": "dist/main.js",
+        "methods": ["GET", "POST", "PUT", "DELETE"]
+      },
+      {
+        "src": "/users/(.*)",
+        "dest": "dist/main.js",
+        "methods": ["GET", "POST", "PUT", "DELETE"]
+      },
+      {
+        "src": "/trips/(.*)",
+        "dest": "dist/main.js",
+        "methods": ["GET", "POST", "PUT", "DELETE"]
+      },
       {
         "src": "/(.*)",
         "dest": "dist/main.js",
-        "methods": [
-          "GET",
-          "POST",
-          "PUT",
-          "DELETE"
-        ]
+        "methods": ["GET", "POST", "PUT", "DELETE"]
       }
     ]
   }
+  
