@@ -16,7 +16,7 @@ async function bootstrap() {
 
 
   app.enableCors({
-    origin: 'https://travel-app-frontend-zeta.vercel.app', // Your frontend URL
+    origin: process.env.FRONTEND_URL, // Your frontend URL
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     credentials: true,
     //allowedHeaders: 'Content-Type, Authorization',

@@ -52,7 +52,7 @@ let AuthController = class AuthController {
         try {
             const user = req.user;
             console.log('Backend received user:', user);
-            const redirectUrl = new URL('https://travel-app-frontend-zeta.vercel.app');
+            const redirectUrl = new URL(process.env.FRONTEND_URL);
             redirectUrl.searchParams.set('email', user.email);
             redirectUrl.searchParams.set('name', user.displayName);
             redirectUrl.searchParams.set('photo', user.photo);
@@ -61,7 +61,7 @@ let AuthController = class AuthController {
         }
         catch (error) {
             console.error('Auth error:', error);
-            res.redirect('https://travel-app-frontend-zeta.vercel.app?error=auth_failed');
+            res.redirect('${process.env.FRONTEND_URL}?error=auth_failed');
         }
     }
 };
