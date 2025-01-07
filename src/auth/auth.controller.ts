@@ -1,12 +1,12 @@
 //auth.controller.ts
 import { Controller, Get, Req, Res, UnauthorizedException, UseGuards } from '@nestjs/common';
-import { GoogleAuthGuard } from './google-auth.guard';
-import { AuthService } from './auth.service';
-import { Response } from 'express';
 import { ConfigService } from '@nestjs/config';
 import { InjectModel } from '@nestjs/mongoose';
-import { GoogleUser, GoogleUserSchema } from '../modules/google-user/schemas/google-user.schema';
+import { Response } from 'express';
 import { Model } from 'mongoose';
+import { GoogleUser } from '../modules/google-user/schemas/google-user.schema';
+import { AuthService } from './auth.service';
+import { GoogleAuthGuard } from './google-auth.guard';
 
 @Controller('auth')
 export class AuthController {
@@ -59,7 +59,7 @@ export class AuthController {
       const user = req.user;
       console.log('Backend received user:', user);
   
-      const redirectUrl = new URL('http://localhost:5173');
+      const redirectUrl = new URL('https://travel-app-frontend-zeta.vercel.app');
       redirectUrl.searchParams.set('email', user.email);
       redirectUrl.searchParams.set('name', user.displayName);
       redirectUrl.searchParams.set('photo', user.photo);
@@ -68,7 +68,7 @@ export class AuthController {
       res.redirect(redirectUrl.toString());
     } catch (error) {
       console.error('Auth error:', error);
-      res.redirect('http://localhost:5173?error=auth_failed');
+      res.redirect('https://travel-app-frontend-zeta.vercel.app?error=auth_failed');
     }
   }
 }
