@@ -1,8 +1,8 @@
-import { AuthService } from './auth.service';
-import { Response } from 'express';
 import { ConfigService } from '@nestjs/config';
-import { GoogleUser } from '../modules/google-user/schemas/google-user.schema';
+import { Response } from 'express';
 import { Model } from 'mongoose';
+import { GoogleUser } from '../modules/google-user/schemas/google-user.schema';
+import { AuthService } from './auth.service';
 export declare class AuthController {
     private readonly authService;
     private readonly configService;

@@ -3,6 +3,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { PassportStrategy } from '@nestjs/passport';
 import { Model } from 'mongoose';
+
 import { Strategy, VerifyCallback } from 'passport-google-oauth20';
 
 // Import from modules/google-user
@@ -17,7 +18,7 @@ export class GoogleStrategy extends PassportStrategy(Strategy, 'google') {
     super({
       clientID: process.env.GOOGLE_CLIENT_ID,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-      callbackURL: 'http://travelbackend.monster:3000/auth/google/callback',
+      callbackURL: 'https://thisis.travelbackend.monster/auth/google/callback',
       scope: ['profile', 'email'],
       passReqToCallback: true,
     });

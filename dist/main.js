@@ -12,7 +12,7 @@ const expressApp = express();
 async function bootstrap() {
     const app = await core_1.NestFactory.create(app_module_1.AppModule, new platform_express_1.ExpressAdapter(expressApp));
     app.enableCors({
-        origin: 'http://localhost:5173',
+        origin: 'https://travel-app-frontend-zeta.vercel.app',
         methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
         credentials: true,
     });

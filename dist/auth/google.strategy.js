@@ -14,17 +14,17 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.GoogleStrategy = void 0;
 const common_1 = require("@nestjs/common");
-const passport_1 = require("@nestjs/passport");
-const passport_google_oauth20_1 = require("passport-google-oauth20");
 const mongoose_1 = require("@nestjs/mongoose");
+const passport_1 = require("@nestjs/passport");
 const mongoose_2 = require("mongoose");
+const passport_google_oauth20_1 = require("passport-google-oauth20");
 const google_user_schema_1 = require("../modules/google-user/schemas/google-user.schema");
 let GoogleStrategy = class GoogleStrategy extends (0, passport_1.PassportStrategy)(passport_google_oauth20_1.Strategy, 'google') {
     constructor(googleUserModel) {
         super({
             clientID: process.env.GOOGLE_CLIENT_ID,
             clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-            callbackURL: 'http://localhost:3000/auth/google/callback',
+            callbackURL: 'https://thisis.travelbackend.monster/auth/google/callback',
             scope: ['profile', 'email'],
             passReqToCallback: true,
         });

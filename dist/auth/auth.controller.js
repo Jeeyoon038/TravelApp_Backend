@@ -14,12 +14,12 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.AuthController = void 0;
 const common_1 = require("@nestjs/common");
-const google_auth_guard_1 = require("./google-auth.guard");
-const auth_service_1 = require("./auth.service");
 const config_1 = require("@nestjs/config");
 const mongoose_1 = require("@nestjs/mongoose");
-const google_user_schema_1 = require("../modules/google-user/schemas/google-user.schema");
 const mongoose_2 = require("mongoose");
+const google_user_schema_1 = require("../modules/google-user/schemas/google-user.schema");
+const auth_service_1 = require("./auth.service");
+const google_auth_guard_1 = require("./google-auth.guard");
 let AuthController = class AuthController {
     constructor(authService, configService, googleUserModel) {
         this.authService = authService;
@@ -52,7 +52,7 @@ let AuthController = class AuthController {
         try {
             const user = req.user;
             console.log('Backend received user:', user);
-            const redirectUrl = new URL('http://localhost:5173');
+            const redirectUrl = new URL('http://travel-app-frontend-zeta.vercel.app');
             redirectUrl.searchParams.set('email', user.email);
             redirectUrl.searchParams.set('name', user.displayName);
             redirectUrl.searchParams.set('photo', user.photo);
@@ -61,7 +61,7 @@ let AuthController = class AuthController {
         }
         catch (error) {
             console.error('Auth error:', error);
-            res.redirect('http://localhost:5173?error=auth_failed');
+            res.redirect('http://travel-app-frontend-zeta.vercel.app?error=auth_failed');
         }
     }
 };
