@@ -1,9 +1,9 @@
 // src/auth/google.strategy.ts
 import { Injectable } from '@nestjs/common';
-import { PassportStrategy } from '@nestjs/passport';
-import { Strategy, VerifyCallback } from 'passport-google-oauth20';
 import { InjectModel } from '@nestjs/mongoose';
+import { PassportStrategy } from '@nestjs/passport';
 import { Model } from 'mongoose';
+import { Strategy, VerifyCallback } from 'passport-google-oauth20';
 
 // Import from modules/google-user
 import { GoogleUser } from 'src/modules/google-user/schemas/google-user.schema';
@@ -17,7 +17,7 @@ export class GoogleStrategy extends PassportStrategy(Strategy, 'google') {
     super({
       clientID: process.env.GOOGLE_CLIENT_ID,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-      callbackURL: 'http://localhost:3000/auth/google/callback',
+      callbackURL: 'http://13.61.86.122:3000//auth/google/callback',
       scope: ['profile', 'email'],
       passReqToCallback: true,
     });
