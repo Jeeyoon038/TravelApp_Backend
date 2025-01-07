@@ -1,24 +1,30 @@
 import { NestFactory } from '@nestjs/core';
-import { AppModule } from './app.module';
+import * as serverlessExpress from '@vendia/serverless-express';
+import { Callback, Context, Handler } from 'aws-lambda';
 import * as dotenv from 'dotenv';
+import { AppModule } from './app.module';
 
 dotenv.config();
 
+let server: Handler;
+
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  
-
-
 
   app.enableCors({
-    origin: 'http://localhost:5173', // Your frontend URL
+    origin: process.env.FRONTEND_URL || 'http://localhost:5173', // 환경변수로 프론트엔드 URL 관리
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     credentials: true,
-    //allowedHeaders: 'Content-Type, Authorization',
   });
 
-  await app.listen(3000);
-  console.log('Application is running on port 3000');
-
+  await app.init(); // 서버 초기화
+  const expressApp = app.getHttpAdapter().getInstance();
+  return serverlessExpress({ app: expressApp });
 }
-bootstrap();
+
+export const handler: Handler = async (event: any, context: Context, callback: Callback) => {
+  if (!server) {
+    server = await bootstrap();
+  }
+  return server(event, context, callback);
+};
