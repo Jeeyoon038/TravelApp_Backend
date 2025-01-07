@@ -7,6 +7,10 @@ import { ImageMetadataModule } from './modules/imagemetadata/image-metadata.modu
 import { UploadModule } from './modules/uploadImage/upload.module';
 import { AuthModule } from './auth/auth.module';
 import { GoogleUserModule } from './modules/google-user/google-user.module';
+import { AuthController } from './auth/auth.controller';
+import { AuthService } from './auth/auth.service';
+import { GoogleStrategy } from './auth/google.strategy';
+import { GoogleUser, GoogleUserSchema } from './modules/google-user/schemas/google-user.schema';
 
 @Module({
   imports: [
@@ -22,6 +26,9 @@ import { GoogleUserModule } from './modules/google-user/google-user.module';
       },
       inject: [ConfigService],
     }),
+    MongooseModule.forFeature([
+      { name: GoogleUser.name, schema: GoogleUserSchema }
+    ]),
     
     AuthModule,
     UsersModule,
@@ -33,5 +40,8 @@ import { GoogleUserModule } from './modules/google-user/google-user.module';
     
     
   ],
+
+  controllers: [AuthController],
+  providers: [AuthService, GoogleStrategy],
 })
 export class AppModule {}

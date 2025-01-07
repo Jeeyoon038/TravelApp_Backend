@@ -1,55 +1,46 @@
-import { Injectable } from '@nestjs/common';
+// auth.service.ts
+import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { JwtService } from '@nestjs/jwt';
-import { GoogleUser } from './google-user.schema';
+import { GoogleUser, GoogleUserDocument } from '../modules/google-user/schemas/google-user.schema';
 
 @Injectable()
 export class AuthService {
   constructor(
     @InjectModel(GoogleUser.name)
-    private googleUserModel: Model<GoogleUser>,
-    private jwtService: JwtService
+    private readonly googleUserModel: Model<GoogleUserDocument>,
   ) {}
 
-  async googleLogin(user: any) {
+  /**
+   * Called after Google OAuth Guard populates 'req.user'.
+   * This method finds or creates the user in the DB.
+   */
+  async googleLogin(googleUser: GoogleUser) {
     try {
-      // Find or create user
-      let googleUser = await this.googleUserModel.findOne({ 
-        googleId: user.googleId 
-      });
-
-      if (!googleUser) {
-        googleUser = new this.googleUserModel({
-          googleId: user.googleId,
-          email: user.email,
-          displayName: user.displayName,
-          profilePicture: user.profilePicture
-        });
-        await googleUser.save();
-      }
-
-      // Generate JWT token
-      const payload = { 
-        sub: googleUser._id, 
-        email: googleUser.email, 
-        displayName: googleUser.displayName 
-      };
-
-      const access_token = this.jwtService.sign(payload);
-
-      return {
-        access_token,
-        user: {
+      // 1) Look up existing user by googleId
+      let user = await this.googleUserModel.findOne({ googleId: googleUser.googleId });
+      // 2) If user doesn't exist, create a new record
+      if (!user) {
+        user = new this.googleUserModel({
           googleId: googleUser.googleId,
           email: googleUser.email,
-          name: googleUser.displayName,
-          profilePicture: googleUser.profilePicture
-        }
+          displayName: googleUser.displayName,
+          photo: googleUser.photo,
+        });
+        await user.save();
+      }
+      // 3) Return safe user data (or your own token logic)
+      return {
+        user: {
+          googleId: user.googleId,
+          email: user.email,
+          name: user.displayName,
+          photo: user.photo,
+        },
       };
     } catch (error) {
-      console.error('Google login error:', error);
-      throw new Error('Failed to process Google login');
+      // 4) Catch any DB or other errors and throw a 500
+      throw new InternalServerErrorException(error.message);
     }
   }
 }

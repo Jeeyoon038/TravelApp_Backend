@@ -1,13 +1,13 @@
 // src/modules/image-metadata/image-metadata.controller.ts
 
 import { Controller, Get, Post, Body, Param, Delete, HttpCode, HttpStatus, UsePipes, ValidationPipe } from '@nestjs/common';
-import { ImageMetadataService } from './image-metadata.service';
+import { ImagesService } from './image-metadata.service';
 import { CreateImageMetadataDto } from './dto/create-image-metadata.dto';
 import { ImageMetadata } from './schemas/image-metadata.schema';
 
 @Controller('image-metadata')
 export class ImageMetadataController {
-  constructor(private readonly imageMetadataService: ImageMetadataService) {}
+  constructor(private readonly imageMetadataService: ImagesService) {}
 
 
   @Post()

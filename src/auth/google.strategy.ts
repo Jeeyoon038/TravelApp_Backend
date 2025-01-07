@@ -1,17 +1,18 @@
+// src/auth/google.strategy.ts
 import { Injectable } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { Strategy, VerifyCallback } from 'passport-google-oauth20';
-import { JwtService } from '@nestjs/jwt';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { GoogleUser } from './google-user.schema';
+
+// Import from modules/google-user
+import { GoogleUser } from 'src/modules/google-user/schemas/google-user.schema';
 
 @Injectable()
 export class GoogleStrategy extends PassportStrategy(Strategy, 'google') {
   constructor(
-    private jwtService: JwtService,
-    @InjectModel(GoogleUser.name) 
-    private googleUserModel: Model<GoogleUser>
+    @InjectModel(GoogleUser.name)
+    private googleUserModel: Model<GoogleUser>,
   ) {
     super({
       clientID: process.env.GOOGLE_CLIENT_ID,
@@ -24,25 +25,41 @@ export class GoogleStrategy extends PassportStrategy(Strategy, 'google') {
 
   async validate(
     request: any,
-    accessToken: string, 
-    refreshToken: string, 
+    accessToken: string,
+    refreshToken: string,
     profile: any,
-    done: VerifyCallback
-  ) : Promise<any>{
+    done: VerifyCallback,
+  ): Promise<any> {
     try {
-      const { id, emails, displayName, photos } = profile;
-  
-      const user = await this.googleUserModel.findOne({ googleId: id });
-      if (!user) {
-        const newUser = new this.googleUserModel({
-          googleId: id,
-          email: emails[0].value,
-          displayName: displayName,
-          photo: photos[0].value,
-        });
-        await newUser.save();
-        return done(null, newUser);
+      // Grab needed fields from the profile
+      const googleId = profile.id;
+      const emails = profile.emails || [];
+      const photos = profile.photos || [];
+      const displayName = profile.displayName || '';
+
+      const email = emails.length ? emails[0].value : '';
+      const firstName = profile.name?.givenName || '';
+      const lastName = profile.name?.familyName || '';
+      const photo = photos.length ? photos[0].value : '';
+
+      if (!googleId) {
+        console.error('No Google ID in profile, cannot proceed');
+        return done(null, false);
       }
+
+      let user = await this.googleUserModel.findOne({ googleId });
+      if (!user) {
+        user = await this.googleUserModel.create({
+          googleId,
+          email,
+          displayName,
+          firstName,
+          lastName,
+          photo,
+        });
+      }
+
+      // Attach user to req.user
       return done(null, user);
     } catch (err) {
       console.error('Error in Google Strategy:', err);

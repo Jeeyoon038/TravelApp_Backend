@@ -1,5 +1,4 @@
-// src/google-user/google-user.module.ts
-
+// src/modules/google-user/google-user.module.ts
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { GoogleUser, GoogleUserSchema } from './schemas/google-user.schema';
@@ -12,6 +11,6 @@ import { GoogleUserController } from './google-user.controller';
   ],
   providers: [GoogleUserService],
   controllers: [GoogleUserController],
-  exports: [GoogleUserService],
+  exports: [GoogleUserService], // so AuthModule can use it if needed
 })
 export class GoogleUserModule {}

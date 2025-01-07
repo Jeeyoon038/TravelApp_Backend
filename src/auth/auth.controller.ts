@@ -1,15 +1,20 @@
-//autho.controller.ts
-import { Controller, Get, Req, Res, UseGuards } from '@nestjs/common';
+//auth.controller.ts
+import { Controller, Get, Req, Res, UnauthorizedException, UseGuards } from '@nestjs/common';
 import { GoogleAuthGuard } from './google-auth.guard';
 import { AuthService } from './auth.service';
-import { Request, Response } from 'express';
+import { Response } from 'express';
 import { ConfigService } from '@nestjs/config';
+import { InjectModel } from '@nestjs/mongoose';
+import { GoogleUser, GoogleUserSchema } from '../modules/google-user/schemas/google-user.schema';
+import { Model } from 'mongoose';
 
 @Controller('auth')
 export class AuthController {
   constructor(
     private readonly authService: AuthService,
-    private readonly configService: ConfigService
+    private readonly configService: ConfigService,
+    @InjectModel(GoogleUser.name) 
+    private readonly googleUserModel: Model<GoogleUser>
   ) {}
 
   @Get('google')
@@ -18,38 +23,52 @@ export class AuthController {
     // Initiates Google OAuth
   }
 
-  @Get('google/callback')
-@UseGuards(GoogleAuthGuard)
-async googleAuthRedirect(@Req() req, @Res() res: Response) {
-  try {
-    console.log('Google Callback Received:', req.user);
-
-    // Generate or retrieve access token
-    const { access_token, user } = await this.authService.googleLogin(req.user);
-
-    console.log('Generated Access Token:', access_token);
-
-    // Redirect directly to home page with query parameters
-    const redirectUrl = new URL('http://localhost:5173/home');
-    redirectUrl.searchParams.set('access_token', access_token);
-    redirectUrl.searchParams.set('email', user.email);
-    redirectUrl.searchParams.set('name', user.name);
+  @Get('user')
+  async getUser(@Req() req) {
+    console.log('1. Request received in getUser');
+    console.log('2. Headers:', req.headers);
     
-    if (user.profilePicture) {
-      redirectUrl.searchParams.set('profile_picture', user.profilePicture);
+    const authHeader = req.headers.authorization;
+    console.log('3. Authorization header:', authHeader);
+    
+    if (!authHeader?.startsWith('Bearer ')) {
+      console.log('4. No Bearer token found');
+      throw new UnauthorizedException();
     }
-
-    console.log('Redirecting to:', redirectUrl.toString());
     
-    // Redirect to frontend home page with token and user info
-    res.redirect(redirectUrl.toString());
-  } catch (error) {
-    console.error('Google auth error:', error);
+    const token = authHeader.split(' ')[1];
+    console.log('5. Token extracted:', token);
     
-    // Redirect with error to home page
-    const errorRedirectUrl = new URL('http://localhost:5173/home');
-    errorRedirectUrl.searchParams.set('error', 'Authentication failed');
-    res.redirect(errorRedirectUrl.toString());
+    const userData = await this.googleUserModel.findOne({ googleId: token });
+    console.log('6. User data found:', userData);
+    
+    if (!userData) {
+      console.log('7. No user found');
+      throw new UnauthorizedException(); 
+    }
+    
+    console.log('8. Returning user data');
+    return userData;
   }
-}
+
+
+  @Get('google/callback')
+  @UseGuards(GoogleAuthGuard)
+  async googleAuthRedirect(@Req() req, @Res() res: Response) {
+    try {
+      const user = req.user;
+      console.log('Backend received user:', user);
+  
+      const redirectUrl = new URL('http://localhost:5173');
+      redirectUrl.searchParams.set('email', user.email);
+      redirectUrl.searchParams.set('name', user.displayName);
+      redirectUrl.searchParams.set('photo', user.photo);
+  
+      console.log('Redirecting to:', redirectUrl.toString());
+      res.redirect(redirectUrl.toString());
+    } catch (error) {
+      console.error('Auth error:', error);
+      res.redirect('http://localhost:5173?error=auth_failed');
+    }
+  }
 }
