@@ -22,7 +22,7 @@ async function bootstrap() {
     //allowedHeaders: 'Content-Type, Authorization',
   });
 
-  await app.listen(3000);
+  await app.listen(process.env.PORT || 3000);
   console.log('Application is running on port 3000');
 
 }
