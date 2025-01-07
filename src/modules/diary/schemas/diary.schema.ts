@@ -16,6 +16,9 @@ export class Diary {
 
   @Prop({ required: true })
   content: string;
+
+  @Prop({ type: Types.ObjectId, ref: User.name, required: true })
+  author: Types.ObjectId; // New field for author
 }
 
 export const DiarySchema = SchemaFactory.createForClass(Diary);

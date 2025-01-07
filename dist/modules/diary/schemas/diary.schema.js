@@ -28,6 +28,10 @@ __decorate([
     (0, mongoose_1.Prop)({ required: true }),
     __metadata("design:type", String)
 ], Diary.prototype, "content", void 0);
+__decorate([
+    (0, mongoose_1.Prop)({ type: mongoose_2.Types.ObjectId, ref: User.name, required: true }),
+    __metadata("design:type", mongoose_2.Types.ObjectId)
+], Diary.prototype, "author", void 0);
 exports.Diary = Diary = __decorate([
     (0, mongoose_1.Schema)({ timestamps: true })
 ], Diary);

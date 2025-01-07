@@ -1,6 +1,6 @@
 // src/modules/diary/dto/create-diary.dto.ts
 
-import { IsNotEmpty, IsString, Matches } from 'class-validator';
+import { IsMongoId, IsNotEmpty, IsString, Matches } from 'class-validator';
 
 export class CreateDiaryDto {
   @IsNotEmpty()
@@ -15,4 +15,8 @@ export class CreateDiaryDto {
   @IsNotEmpty()
   @IsString()
   content: string;
+
+  @IsNotEmpty()
+  @IsMongoId()
+  author: string; // New field for author ID
 }

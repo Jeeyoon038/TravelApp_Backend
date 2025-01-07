@@ -4,6 +4,7 @@ export declare class Diary {
     trip_id: Types.ObjectId;
     date: string;
     content: string;
+    author: Types.ObjectId;
 }
 export declare const DiarySchema: import("mongoose").Schema<Diary, import("mongoose").Model<Diary, any, any, any, Document<unknown, any, Diary> & Diary & {
     _id: Types.ObjectId;
