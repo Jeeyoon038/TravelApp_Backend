@@ -15,6 +15,7 @@ const auth_module_1 = require("./auth/auth.module");
 const auth_service_1 = require("./auth/auth.service");
 const google_strategy_1 = require("./auth/google.strategy");
 const health_module_1 = require("./health/health.module");
+const diary_module_1 = require("./modules/diary/diary.module");
 const google_user_module_1 = require("./modules/google-user/google-user.module");
 const google_user_schema_1 = require("./modules/google-user/schemas/google-user.schema");
 const image_metadata_module_1 = require("./modules/imagemetadata/image-metadata.module");
@@ -48,7 +49,7 @@ exports.AppModule = AppModule = __decorate([
             trips_module_1.TripsModule,
             image_metadata_module_1.ImageMetadataModule,
             upload_module_1.UploadModule,
-            image_metadata_module_1.ImageMetadataModule,
+            diary_module_1.DiaryModule,
             google_user_module_1.GoogleUserModule
         ],
         controllers: [auth_controller_1.AuthController],

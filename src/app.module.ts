@@ -6,12 +6,14 @@ import { AuthModule } from './auth/auth.module';
 import { AuthService } from './auth/auth.service';
 import { GoogleStrategy } from './auth/google.strategy';
 import { HealthModule } from './health/health.module';
+import { DiaryModule } from './modules/diary/diary.module'; // DiaryModule 추가
 import { GoogleUserModule } from './modules/google-user/google-user.module';
 import { GoogleUser, GoogleUserSchema } from './modules/google-user/schemas/google-user.schema';
 import { ImageMetadataModule } from './modules/imagemetadata/image-metadata.module';
 import { TripsModule } from './modules/trips/trips.module';
 import { UploadModule } from './modules/uploadImage/upload.module';
 import { UsersModule } from './modules/users/users.module';
+
 
 @Module({
   imports: [
@@ -36,7 +38,7 @@ import { UsersModule } from './modules/users/users.module';
     TripsModule,
     ImageMetadataModule,
     UploadModule,
-    ImageMetadataModule,
+    DiaryModule,
     GoogleUserModule
     
     
