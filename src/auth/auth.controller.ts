@@ -68,7 +68,7 @@ export class AuthController {
       res.redirect(redirectUrl.toString());
     } catch (error) {
       console.error('Auth error:', error);
-      res.redirect('${process.env.FRONTEND_URL}?error=auth_failed');
+      res.redirect(`${process.env.FRONTEND_URL}?error=auth_failed`);
     }
   }
 }
