@@ -1,4 +1,3 @@
-// src/modules/trips/trips.controller.ts
 import { Controller, Get, Post, Body, Param, Delete, Put, UseInterceptors, UploadedFiles, Patch } from '@nestjs/common';
 import { TripsService } from './trips.service';
 import { CreateTripDto } from './dto/create-trip.dto';
@@ -6,7 +5,6 @@ import { Trip } from './schemas/trip.schema';
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { s3Client } from '../../config/aws.config';
 import * as AWS from '@aws-sdk/client-s3';
-
 
 @Controller('trips')
 export class TripsController {
@@ -35,13 +33,10 @@ export class TripsController {
 
   @Post()
   async create(@Body() createTripDto: CreateTripDto) {
-    console.log('Received trip data:', createTripDto);  // Log the received data (check files URL)
+    console.log('Received trip data:', createTripDto);
     return this.tripsService.create(createTripDto);
   }
- 
 
-
-  //여행 데이터 하나 가져오기 (Id로 조회)
   @Get(':id')
   async findOne(@Param('id') id: number): Promise<Trip> {
     return this.tripsService.findOne(id);
@@ -52,5 +47,4 @@ export class TripsController {
     const { googleEmail } = body;
     return this.tripsService.addMember(tripId, googleEmail);
   }
-
 }

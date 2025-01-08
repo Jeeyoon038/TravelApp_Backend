@@ -16,41 +16,33 @@ exports.AuthService = void 0;
 const common_1 = require("@nestjs/common");
 const mongoose_1 = require("@nestjs/mongoose");
 const mongoose_2 = require("mongoose");
+const jwt_1 = require("@nestjs/jwt");
 const google_user_schema_1 = require("../modules/google-user/schemas/google-user.schema");
 let AuthService = class AuthService {
-    constructor(googleUserModel) {
+    constructor(googleUserModel, jwtService) {
         this.googleUserModel = googleUserModel;
+        this.jwtService = jwtService;
     }
-    async googleLogin(googleUser) {
-        try {
-            let user = await this.googleUserModel.findOne({ googleId: googleUser.googleId });
-            if (!user) {
-                user = new this.googleUserModel({
-                    googleId: googleUser.googleId,
-                    email: googleUser.email,
-                    displayName: googleUser.displayName,
-                    photo: googleUser.photo,
-                });
-                await user.save();
-            }
-            return {
-                user: {
-                    googleId: user.googleId,
-                    email: user.email,
-                    name: user.displayName,
-                    photo: user.photo,
-                },
-            };
+    async googleLogin(user) {
+        let existingUser = await this.googleUserModel.findOne({ googleId: user.googleId }).exec();
+        if (!existingUser) {
+            existingUser = await this.googleUserModel.create({
+                googleId: user.googleId,
+                email: user.email,
+                name: user.name,
+                avatarUrl: user.avatarUrl,
+            });
         }
-        catch (error) {
-            throw new common_1.InternalServerErrorException(error.message);
-        }
+        const payload = { sub: existingUser._id, email: existingUser.email };
+        const accessToken = this.jwtService.sign(payload);
+        return { accessToken };
     }
 };
 exports.AuthService = AuthService;
 exports.AuthService = AuthService = __decorate([
     (0, common_1.Injectable)(),
     __param(0, (0, mongoose_1.InjectModel)(google_user_schema_1.GoogleUser.name)),
-    __metadata("design:paramtypes", [mongoose_2.Model])
+    __metadata("design:paramtypes", [mongoose_2.Model,
+        jwt_1.JwtService])
 ], AuthService);
 //# sourceMappingURL=auth.service.js.map

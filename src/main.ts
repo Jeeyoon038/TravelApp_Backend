@@ -17,12 +17,12 @@ async function bootstrap() {
 
   app.enableCors({
     origin: process.env.FRONTEND_URL, // Your frontend URL
-    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+    methods:['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
     credentials: true,
     //allowedHeaders: 'Content-Type, Authorization',
   });
 
-  await app.listen(process.env.PORT || 3000);
+  await app.listen(3000);
   console.log('Application is running on port 3000');
 
 }

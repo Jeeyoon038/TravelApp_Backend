@@ -11,68 +11,58 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
+var ImageMetadataController_1;
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ImageMetadataController = void 0;
 const common_1 = require("@nestjs/common");
 const image_metadata_service_1 = require("./image-metadata.service");
-const create_image_metadata_dto_1 = require("./dto/create-image-metadata.dto");
-let ImageMetadataController = class ImageMetadataController {
-    constructor(imageMetadataService) {
-        this.imageMetadataService = imageMetadataService;
+const jwt_auth_guard_1 = require("../../auth/jwt-auth.guard");
+const swagger_1 = require("@nestjs/swagger");
+const jwt_1 = require("@nestjs/jwt");
+let ImageMetadataController = ImageMetadataController_1 = class ImageMetadataController {
+    constructor(imagesService, jwtService) {
+        this.imagesService = imagesService;
+        this.jwtService = jwtService;
+        this.logger = new common_1.Logger(ImageMetadataController_1.name);
     }
-    async create(createImageMetadataDto) {
+    async uploadMetadata(images) {
+        this.logger.debug(`Received metadata for ${images?.length} images`);
+        if (!Array.isArray(images) || images.length === 0) {
+            this.logger.warn('No image metadata provided');
+            throw new common_1.BadRequestException('No image metadata provided');
+        }
         try {
-            console.log('Received CreateImageMetadataDto:', createImageMetadataDto);
-            return await this.imageMetadataService.create(createImageMetadataDto);
+            this.logger.debug('Processing metadata upload request');
+            const result = await this.imagesService.createMany(images);
+            this.logger.debug('Metadata upload successful');
+            return {
+                message: 'Image metadata uploaded successfully',
+                data: result
+            };
         }
         catch (error) {
-            console.error('Error in ImageMetadataController.create:', error);
-            throw error;
+            this.logger.error('Failed to upload metadata', error.stack);
+            throw new common_1.BadRequestException(error.message || 'Failed to upload image metadata');
         }
-    }
-    async findAll() {
-        return this.imageMetadataService.findAll();
-    }
-    async findOne(id) {
-        return this.imageMetadataService.findOne(id);
-    }
-    async delete(id) {
-        await this.imageMetadataService.delete(id);
     }
 };
 exports.ImageMetadataController = ImageMetadataController;
 __decorate([
     (0, common_1.Post)(),
-    (0, common_1.HttpCode)(common_1.HttpStatus.CREATED),
-    (0, common_1.UsePipes)(new common_1.ValidationPipe({ whitelist: true, forbidNonWhitelisted: true, transform: true })),
+    (0, swagger_1.ApiOperation)({ summary: 'Upload image metadata' }),
+    (0, swagger_1.ApiResponse)({ status: 201, description: 'Image metadata uploaded successfully' }),
+    (0, swagger_1.ApiResponse)({ status: 400, description: 'Bad Request' }),
+    (0, swagger_1.ApiResponse)({ status: 401, description: 'Unauthorized' }),
     __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [create_image_metadata_dto_1.CreateImageMetadataDto]),
+    __metadata("design:paramtypes", [Array]),
     __metadata("design:returntype", Promise)
-], ImageMetadataController.prototype, "create", null);
-__decorate([
-    (0, common_1.Get)(),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", []),
-    __metadata("design:returntype", Promise)
-], ImageMetadataController.prototype, "findAll", null);
-__decorate([
-    (0, common_1.Get)(':id'),
-    __param(0, (0, common_1.Param)('id')),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String]),
-    __metadata("design:returntype", Promise)
-], ImageMetadataController.prototype, "findOne", null);
-__decorate([
-    (0, common_1.Delete)(':id'),
-    (0, common_1.HttpCode)(common_1.HttpStatus.NO_CONTENT),
-    __param(0, (0, common_1.Param)('id')),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String]),
-    __metadata("design:returntype", Promise)
-], ImageMetadataController.prototype, "delete", null);
-exports.ImageMetadataController = ImageMetadataController = __decorate([
-    (0, common_1.Controller)('image-metadata'),
-    __metadata("design:paramtypes", [image_metadata_service_1.ImagesService])
+], ImageMetadataController.prototype, "uploadMetadata", null);
+exports.ImageMetadataController = ImageMetadataController = ImageMetadataController_1 = __decorate([
+    (0, common_1.Controller)('api/image-metadata'),
+    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
+    (0, swagger_1.ApiBearerAuth)(),
+    __metadata("design:paramtypes", [image_metadata_service_1.ImagesService,
+        jwt_1.JwtService])
 ], ImageMetadataController);
 //# sourceMappingURL=image-metadata.controller.js.map

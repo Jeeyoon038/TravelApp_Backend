@@ -30,6 +30,7 @@
     "@nestjs/mongoose": "^10.1.0",
     "@nestjs/passport": "^10.0.3",
     "@nestjs/platform-express": "^10.4.15",
+    "@nestjs/swagger": "^8.1.0",
     "@nestjs/typeorm": "^10.0.2",
     "@types/aws-lambda": "^8.10.147",
     "@vendia/serverless-express": "^3.4.1",

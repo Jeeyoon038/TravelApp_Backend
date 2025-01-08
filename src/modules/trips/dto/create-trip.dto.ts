@@ -1,4 +1,3 @@
-// src/modules/trips/dto/create-trip.dto.ts
 import { IsNotEmpty, IsString, IsDate, IsOptional, IsArray } from 'class-validator';
 
 export class CreateTripDto {
@@ -21,4 +20,8 @@ export class CreateTripDto {
   @IsArray()
   @IsString({ each: true })
   member_google_ids?: string[];
+
+  @IsNotEmpty()
+  @IsString()
+  created_by: string;
 }

@@ -13,10 +13,10 @@ async function bootstrap() {
     const app = await core_1.NestFactory.create(app_module_1.AppModule, new platform_express_1.ExpressAdapter(expressApp));
     app.enableCors({
         origin: process.env.FRONTEND_URL,
-        methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+        methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
         credentials: true,
     });
-    await app.listen(process.env.PORT || 3000);
+    await app.listen(3000);
     console.log('Application is running on port 3000');
 }
 bootstrap();

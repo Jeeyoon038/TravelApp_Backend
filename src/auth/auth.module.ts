@@ -1,24 +1,27 @@
-// auth.module.ts
+// src/auth/auth.module.ts
+
 import { Module } from '@nestjs/common';
-import { PassportModule } from '@nestjs/passport';
-import { MongooseModule } from '@nestjs/mongoose';
-import { AuthController } from './auth.controller';
+import { JwtModule } from '@nestjs/jwt';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { AuthService } from './auth.service';
-import { GoogleStrategy } from './google.strategy';
-import { GoogleUser, GoogleUserSchema } from '../modules/google-user/schemas/google-user.schema';
+import { AuthController } from './auth.controller';
+import { GoogleUserModule } from '../modules/google-user/google-user.module';
 
 @Module({
   imports: [
-    PassportModule.register({ defaultStrategy: 'google' }),
-    MongooseModule.forFeature([
-      { name: 'GoogleUser', schema: GoogleUserSchema }  // Note: using string 'GoogleUser'
-    ]),
+    ConfigModule, // Ensure ConfigModule is imported for environment variables
+    GoogleUserModule, // Import GoogleUserModule for GoogleUserService
+    JwtModule.registerAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: async (configService: ConfigService) => ({
+        secret: configService.get<string>('JWT_SECRET'), // Ensure JWT_SECRET is in .env
+        signOptions: { expiresIn: '1h' },
+      }),
+    }),
   ],
+  providers: [AuthService],
   controllers: [AuthController],
-  providers: [
-    AuthService, 
-    GoogleStrategy
-  ],
-  exports: [AuthService]
+  exports: [AuthService,JwtModule], // Export AuthService if needed elsewhere
 })
 export class AuthModule {}

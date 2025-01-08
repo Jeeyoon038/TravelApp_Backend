@@ -7,6 +7,7 @@ export declare class Trip {
     end_date: Date;
     image_urls: string[];
     member_google_ids: string[];
+    created_by: string;
 }
 export declare const TripSchema: import("mongoose").Schema<Trip, Model<Trip, any, any, any, Document<unknown, any, Trip> & Trip & {
     _id: import("mongoose").Types.ObjectId;

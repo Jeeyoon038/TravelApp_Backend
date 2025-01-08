@@ -6,20 +6,30 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.GoogleAuthGuard = void 0;
+exports.AuthGuard = void 0;
 const common_1 = require("@nestjs/common");
-const passport_1 = require("@nestjs/passport");
-let GoogleAuthGuard = class GoogleAuthGuard extends (0, passport_1.AuthGuard)('google') {
-    handleRequest(err, user, info, context) {
-        console.log('GoogleAuthGuard - Handle Request:', { err, user, info });
-        if (err || !user) {
-            throw err || new Error('User not found');
+let AuthGuard = class AuthGuard {
+    canActivate(context) {
+        const request = context.switchToHttp().getRequest();
+        const token = this.extractTokenFromHeader(request);
+        if (!token) {
+            throw new common_1.UnauthorizedException('No token provided');
         }
-        return user;
+        try {
+            request['user'] = { token };
+            return true;
+        }
+        catch {
+            throw new common_1.UnauthorizedException('Invalid token');
+        }
+    }
+    extractTokenFromHeader(request) {
+        const [type, token] = request.headers.authorization?.split(' ') ?? [];
+        return type === 'Bearer' ? token : undefined;
     }
 };
-exports.GoogleAuthGuard = GoogleAuthGuard;
-exports.GoogleAuthGuard = GoogleAuthGuard = __decorate([
+exports.AuthGuard = AuthGuard;
+exports.AuthGuard = AuthGuard = __decorate([
     (0, common_1.Injectable)()
-], GoogleAuthGuard);
+], AuthGuard);
 //# sourceMappingURL=google-auth.guard.js.map

@@ -14,86 +14,31 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.AuthController = void 0;
 const common_1 = require("@nestjs/common");
-const config_1 = require("@nestjs/config");
-const mongoose_1 = require("@nestjs/mongoose");
-const mongoose_2 = require("mongoose");
-const google_user_schema_1 = require("../modules/google-user/schemas/google-user.schema");
 const auth_service_1 = require("./auth.service");
-const google_auth_guard_1 = require("./google-auth.guard");
 let AuthController = class AuthController {
-    constructor(authService, configService, googleUserModel) {
+    constructor(authService) {
         this.authService = authService;
-        this.configService = configService;
-        this.googleUserModel = googleUserModel;
     }
-    googleAuth() {
-    }
-    async getUser(req) {
-        console.log('1. Request received in getUser');
-        console.log('2. Headers:', req.headers);
-        const authHeader = req.headers.authorization;
-        console.log('3. Authorization header:', authHeader);
-        if (!authHeader?.startsWith('Bearer ')) {
-            console.log('4. No Bearer token found');
-            throw new common_1.UnauthorizedException();
+    async googleLogin(googleId, email, name, avatarUrl) {
+        if (!googleId || !email) {
+            throw new common_1.UnauthorizedException('Invalid Google user data');
         }
-        const token = authHeader.split(' ')[1];
-        console.log('5. Token extracted:', token);
-        const userData = await this.googleUserModel.findOne({ googleId: token });
-        console.log('6. User data found:', userData);
-        if (!userData) {
-            console.log('7. No user found');
-            throw new common_1.UnauthorizedException();
-        }
-        console.log('8. Returning user data');
-        return userData;
-    }
-    async googleAuthRedirect(req, res) {
-        try {
-            const user = req.user;
-            console.log('Backend received user:', user);
-            const redirectUrl = new URL(process.env.FRONTEND_URL);
-            redirectUrl.searchParams.set('email', user.email);
-            redirectUrl.searchParams.set('name', user.displayName);
-            redirectUrl.searchParams.set('photo', user.photo);
-            console.log('Redirecting to:', redirectUrl.toString());
-            res.redirect(redirectUrl.toString());
-        }
-        catch (error) {
-            console.error('Auth error:', error);
-            res.redirect(`${process.env.FRONTEND_URL}?error=auth_failed`);
-        }
+        return this.authService.googleLogin({ googleId, email, name, avatarUrl });
     }
 };
 exports.AuthController = AuthController;
 __decorate([
-    (0, common_1.Get)('google'),
-    (0, common_1.UseGuards)(google_auth_guard_1.GoogleAuthGuard),
+    (0, common_1.Get)('google-login'),
+    __param(0, (0, common_1.Query)('googleId')),
+    __param(1, (0, common_1.Query)('email')),
+    __param(2, (0, common_1.Query)('name')),
+    __param(3, (0, common_1.Query)('avatarUrl')),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", []),
-    __metadata("design:returntype", void 0)
-], AuthController.prototype, "googleAuth", null);
-__decorate([
-    (0, common_1.Get)('user'),
-    __param(0, (0, common_1.Req)()),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object]),
+    __metadata("design:paramtypes", [String, String, String, String]),
     __metadata("design:returntype", Promise)
-], AuthController.prototype, "getUser", null);
-__decorate([
-    (0, common_1.Get)('google/callback'),
-    (0, common_1.UseGuards)(google_auth_guard_1.GoogleAuthGuard),
-    __param(0, (0, common_1.Req)()),
-    __param(1, (0, common_1.Res)()),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object, Object]),
-    __metadata("design:returntype", Promise)
-], AuthController.prototype, "googleAuthRedirect", null);
+], AuthController.prototype, "googleLogin", null);
 exports.AuthController = AuthController = __decorate([
     (0, common_1.Controller)('auth'),
-    __param(2, (0, mongoose_1.InjectModel)(google_user_schema_1.GoogleUser.name)),
-    __metadata("design:paramtypes", [auth_service_1.AuthService,
-        config_1.ConfigService,
-        mongoose_2.Model])
+    __metadata("design:paramtypes", [auth_service_1.AuthService])
 ], AuthController);
 //# sourceMappingURL=auth.controller.js.map

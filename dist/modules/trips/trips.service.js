@@ -17,9 +17,11 @@ const common_1 = require("@nestjs/common");
 const mongoose_1 = require("@nestjs/mongoose");
 const mongoose_2 = require("mongoose");
 const trip_schema_1 = require("./schemas/trip.schema");
+const google_user_service_1 = require("../google-user/google-user.service");
 let TripsService = class TripsService {
-    constructor(tripModel) {
+    constructor(tripModel, googleUserService) {
         this.tripModel = tripModel;
+        this.googleUserService = googleUserService;
     }
     async create(createTripDto) {
         const tripData = {
@@ -43,7 +45,7 @@ let TripsService = class TripsService {
         }
     }
     async addMember(tripId, googleEmail) {
-        const googleUser = await this.GoogleUserService.findByEmail(googleEmail);
+        const googleUser = await this.googleUserService.findByEmail(googleEmail);
         const trip = await this.tripModel.findById(tripId).exec();
         if (!trip) {
             throw new common_1.NotFoundException(`Trip with ID ${tripId} not found`);
@@ -65,6 +67,7 @@ exports.TripsService = TripsService;
 exports.TripsService = TripsService = __decorate([
     (0, common_1.Injectable)(),
     __param(0, (0, mongoose_1.InjectModel)(trip_schema_1.Trip.name)),
-    __metadata("design:paramtypes", [mongoose_2.Model])
+    __metadata("design:paramtypes", [mongoose_2.Model,
+        google_user_service_1.GoogleUserService])
 ], TripsService);
 //# sourceMappingURL=trips.service.js.map

@@ -39,4 +39,9 @@ __decorate([
     (0, class_validator_1.IsString)({ each: true }),
     __metadata("design:type", Array)
 ], CreateTripDto.prototype, "member_google_ids", void 0);
+__decorate([
+    (0, class_validator_1.IsNotEmpty)(),
+    (0, class_validator_1.IsString)(),
+    __metadata("design:type", String)
+], CreateTripDto.prototype, "created_by", void 0);
 //# sourceMappingURL=create-trip.dto.js.map
