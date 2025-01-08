@@ -38,6 +38,10 @@ __decorate([
     (0, mongoose_1.Prop)({ type: [String], default: [] }),
     __metadata("design:type", Array)
 ], Trip.prototype, "member_google_ids", void 0);
+__decorate([
+    (0, mongoose_1.Prop)({ required: true, type: String }),
+    __metadata("design:type", String)
+], Trip.prototype, "created_by", void 0);
 exports.Trip = Trip = __decorate([
     (0, mongoose_1.Schema)({ timestamps: true })
 ], Trip);

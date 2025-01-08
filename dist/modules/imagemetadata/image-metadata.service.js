@@ -21,79 +21,29 @@ let ImagesService = class ImagesService {
     constructor(imageModel) {
         this.imageModel = imageModel;
     }
-    async create(createImageDto) {
-        try {
-            const createdImage = new this.imageModel({
-                ...createImageDto,
-                taken_at: createImageDto.taken_at ? new Date(createImageDto.taken_at) : null
-            });
-            return await createdImage.save();
-        }
-        catch (error) {
-            if (error.code === 11000) {
-                throw new common_1.ConflictException('Image with this image_id already exists');
-            }
-            console.error('Error creating image:', error);
-            throw new common_1.BadRequestException('Failed to create image');
-        }
-    }
-    async findByTripId(tripId) {
-        console.log('Service: Finding images for trip:', tripId);
-        const images = await this.imageModel.find({ trip_id: tripId }).exec();
-        if (!images.length) {
-            throw new common_1.NotFoundException(`No images found for trip ${tripId}`);
-        }
-        return images;
-    }
-    async findAll() {
-        return this.imageModel.find().exec();
-    }
-    async findOne(imageId) {
-        const image = await this.imageModel
-            .findOne({ image_id: imageId })
-            .exec();
-        if (!image) {
-            throw new common_1.NotFoundException(`Image with ID ${imageId} not found`);
-        }
-        return image;
-    }
     async createMany(imageList) {
         try {
             const formattedList = imageList.map(image => ({
                 ...image,
-                taken_at: image.taken_at ? new Date(image.taken_at) : null
+                taken_at: image.taken_at ? new Date(image.taken_at) : null,
             }));
             return await this.imageModel.insertMany(formattedList, {
-                ordered: false
+                ordered: false,
             });
         }
         catch (error) {
             if (error.code === 11000) {
                 throw new common_1.ConflictException('Some images already exist');
             }
+            console.error('Error creating images:', error);
             throw new common_1.BadRequestException('Failed to create images');
         }
-    }
-    async delete(imageId) {
-        const deletedImage = await this.imageModel
-            .findOneAndDelete({ image_id: imageId })
-            .exec();
-        if (!deletedImage) {
-            throw new common_1.NotFoundException(`Image with ID ${imageId} not found`);
-        }
-        return deletedImage;
-    }
-    async deleteByTripId(tripId) {
-        const result = await this.imageModel
-            .deleteMany({ trip_id: tripId })
-            .exec();
-        return { deletedCount: result.deletedCount || 0 };
     }
 };
 exports.ImagesService = ImagesService;
 exports.ImagesService = ImagesService = __decorate([
     (0, common_1.Injectable)(),
-    __param(0, (0, mongoose_1.InjectModel)(image_metadata_schema_1.ImageMetadata.name)),
+    __param(0, (0, mongoose_1.InjectModel)(image_metadata_schema_1.ImageData.name)),
     __metadata("design:paramtypes", [mongoose_2.Model])
 ], ImagesService);
 //# sourceMappingURL=image-metadata.service.js.map

@@ -8,29 +8,31 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.AuthModule = void 0;
 const common_1 = require("@nestjs/common");
-const passport_1 = require("@nestjs/passport");
-const mongoose_1 = require("@nestjs/mongoose");
-const auth_controller_1 = require("./auth.controller");
+const jwt_1 = require("@nestjs/jwt");
+const config_1 = require("@nestjs/config");
 const auth_service_1 = require("./auth.service");
-const google_strategy_1 = require("./google.strategy");
-const google_user_schema_1 = require("../modules/google-user/schemas/google-user.schema");
+const auth_controller_1 = require("./auth.controller");
+const google_user_module_1 = require("../modules/google-user/google-user.module");
 let AuthModule = class AuthModule {
 };
 exports.AuthModule = AuthModule;
 exports.AuthModule = AuthModule = __decorate([
     (0, common_1.Module)({
         imports: [
-            passport_1.PassportModule.register({ defaultStrategy: 'google' }),
-            mongoose_1.MongooseModule.forFeature([
-                { name: 'GoogleUser', schema: google_user_schema_1.GoogleUserSchema }
-            ]),
+            config_1.ConfigModule,
+            google_user_module_1.GoogleUserModule,
+            jwt_1.JwtModule.registerAsync({
+                imports: [config_1.ConfigModule],
+                inject: [config_1.ConfigService],
+                useFactory: async (configService) => ({
+                    secret: configService.get('JWT_SECRET'),
+                    signOptions: { expiresIn: '1h' },
+                }),
+            }),
         ],
+        providers: [auth_service_1.AuthService],
         controllers: [auth_controller_1.AuthController],
-        providers: [
-            auth_service_1.AuthService,
-            google_strategy_1.GoogleStrategy
-        ],
-        exports: [auth_service_1.AuthService]
+        exports: [auth_service_1.AuthService, jwt_1.JwtModule],
     })
 ], AuthModule);
 //# sourceMappingURL=auth.module.js.map

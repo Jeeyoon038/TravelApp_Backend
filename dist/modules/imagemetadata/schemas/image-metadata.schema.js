@@ -9,33 +9,33 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.ImageMetadataSchema = exports.ImageMetadata = void 0;
+exports.ImageDataSchema = exports.ImageData = void 0;
 const mongoose_1 = require("@nestjs/mongoose");
-let ImageMetadata = class ImageMetadata {
+let ImageData = class ImageData {
 };
-exports.ImageMetadata = ImageMetadata;
+exports.ImageData = ImageData;
 __decorate([
-    (0, mongoose_1.Prop)({ required: false }),
+    (0, mongoose_1.Prop)(),
     __metadata("design:type", Number)
-], ImageMetadata.prototype, "latitude", void 0);
+], ImageData.prototype, "latitude", void 0);
 __decorate([
-    (0, mongoose_1.Prop)({ required: false }),
+    (0, mongoose_1.Prop)(),
     __metadata("design:type", Number)
-], ImageMetadata.prototype, "longitude", void 0);
+], ImageData.prototype, "longitude", void 0);
 __decorate([
-    (0, mongoose_1.Prop)({ required: false }),
+    (0, mongoose_1.Prop)(),
     __metadata("design:type", String)
-], ImageMetadata.prototype, "taken_at", void 0);
-__decorate([
-    (0, mongoose_1.Prop)({ required: true }),
-    __metadata("design:type", String)
-], ImageMetadata.prototype, "image_url", void 0);
+], ImageData.prototype, "taken_at", void 0);
 __decorate([
     (0, mongoose_1.Prop)({ required: true, unique: true }),
     __metadata("design:type", String)
-], ImageMetadata.prototype, "image_id", void 0);
-exports.ImageMetadata = ImageMetadata = __decorate([
+], ImageData.prototype, "image_url", void 0);
+__decorate([
+    (0, mongoose_1.Prop)({ required: true, unique: true }),
+    __metadata("design:type", String)
+], ImageData.prototype, "image_id", void 0);
+exports.ImageData = ImageData = __decorate([
     (0, mongoose_1.Schema)({ timestamps: true })
-], ImageMetadata);
-exports.ImageMetadataSchema = mongoose_1.SchemaFactory.createForClass(ImageMetadata);
+], ImageData);
+exports.ImageDataSchema = mongoose_1.SchemaFactory.createForClass(ImageData);
 //# sourceMappingURL=image-metadata.schema.js.map

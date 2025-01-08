@@ -15,13 +15,13 @@ const auth_module_1 = require("./auth/auth.module");
 const auth_service_1 = require("./auth/auth.service");
 const google_strategy_1 = require("./auth/google.strategy");
 const health_module_1 = require("./health/health.module");
-const diary_module_1 = require("./modules/diary/diary.module");
 const google_user_module_1 = require("./modules/google-user/google-user.module");
 const google_user_schema_1 = require("./modules/google-user/schemas/google-user.schema");
 const image_metadata_module_1 = require("./modules/imagemetadata/image-metadata.module");
 const trips_module_1 = require("./modules/trips/trips.module");
 const upload_module_1 = require("./modules/uploadImage/upload.module");
 const users_module_1 = require("./modules/users/users.module");
+const jwt_1 = require("@nestjs/jwt");
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
@@ -40,6 +40,14 @@ exports.AppModule = AppModule = __decorate([
                 },
                 inject: [config_1.ConfigService],
             }),
+            jwt_1.JwtModule.registerAsync({
+                imports: [config_1.ConfigModule],
+                inject: [config_1.ConfigService],
+                useFactory: async (configService) => ({
+                    secret: configService.get('JWT_SECRET'),
+                    signOptions: { expiresIn: '1h' },
+                }),
+            }),
             mongoose_1.MongooseModule.forFeature([
                 { name: google_user_schema_1.GoogleUser.name, schema: google_user_schema_1.GoogleUserSchema }
             ]),
@@ -49,7 +57,6 @@ exports.AppModule = AppModule = __decorate([
             trips_module_1.TripsModule,
             image_metadata_module_1.ImageMetadataModule,
             upload_module_1.UploadModule,
-            diary_module_1.DiaryModule,
             google_user_module_1.GoogleUserModule
         ],
         controllers: [auth_controller_1.AuthController],

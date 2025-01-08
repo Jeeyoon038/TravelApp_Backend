@@ -1,8 +1,9 @@
 // src/modules/google-user/schemas/google-user.schema.ts
-import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { HydratedDocument } from 'mongoose';
 
-export type GoogleUserDocument = HydratedDocument<GoogleUser>;
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { Document } from 'mongoose';
+
+export type GoogleUserDocument = GoogleUser & Document;
 
 @Schema({ timestamps: true })
 export class GoogleUser {
@@ -12,20 +13,11 @@ export class GoogleUser {
   @Prop({ required: true })
   email: string;
 
-  @Prop({ required: true })
-  displayName: string;
+  @Prop()
+  name: string;
 
   @Prop()
-  firstName: string;
-
-  @Prop()
-  lastName: string;
-
-  @Prop()
-  photo: string;
-
-  @Prop()
-  accessToken: string;
+  avatarUrl: string;
 }
 
 export const GoogleUserSchema = SchemaFactory.createForClass(GoogleUser);

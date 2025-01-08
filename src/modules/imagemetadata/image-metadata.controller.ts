@@ -1,45 +1,57 @@
-// src/modules/image-metadata/image-metadata.controller.ts
-
-import { Controller, Get, Post, Body, Param, Delete, HttpCode, HttpStatus, UsePipes, ValidationPipe } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  Body,
+  UseGuards,
+  BadRequestException,
+  Logger,
+} from '@nestjs/common';
 import { ImagesService } from './image-metadata.service';
 import { CreateImageMetadataDto } from './dto/create-image-metadata.dto';
-import { ImageMetadata } from './schemas/image-metadata.schema';
+import { JwtAuthGuard } from '../../auth/jwt-auth.guard';
+import { ApiBearerAuth, ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { JwtService } from '@nestjs/jwt';
 
-@Controller('image-metadata')
+//@ApiTags('image-metadata')
+@Controller('api/image-metadata')
+@UseGuards(JwtAuthGuard) // Use only JwtAuthGuard
+@ApiBearerAuth()
 export class ImageMetadataController {
-  constructor(private readonly imageMetadataService: ImagesService) {}
+  private readonly logger = new Logger(ImageMetadataController.name);
 
+  constructor(
+    private readonly imagesService: ImagesService,
+    private readonly jwtService: JwtService 
+  ) {}
 
   @Post()
-  @HttpCode(HttpStatus.CREATED)
-  @UsePipes(new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true, transform: true }))
-  async create(@Body() createImageMetadataDto: CreateImageMetadataDto): Promise<ImageMetadata> {
-    try {
-      console.log('Received CreateImageMetadataDto:', createImageMetadataDto); // Log incoming data
-      return await this.imageMetadataService.create(createImageMetadataDto);
-    } catch (error) {
-      // Log the error details for debugging
-      console.error('Error in ImageMetadataController.create:', error);
-      throw error; // Re-throw to let NestJS handle the response
+  @ApiOperation({ summary: 'Upload image metadata' })
+  @ApiResponse({ status: 201, description: 'Image metadata uploaded successfully' })
+  @ApiResponse({ status: 400, description: 'Bad Request' })
+  @ApiResponse({ status: 401, description: 'Unauthorized' })
+  async uploadMetadata(@Body() images: CreateImageMetadataDto[]) {
+    // Debug logging
+    this.logger.debug(`Received metadata for ${images?.length} images`);
+    
+    if (!Array.isArray(images) || images.length === 0) {
+      this.logger.warn('No image metadata provided');
+      throw new BadRequestException('No image metadata provided');
     }
-  }
-  
 
-
-
-  @Get()
-  async findAll(): Promise<ImageMetadata[]> {
-    return this.imageMetadataService.findAll();
-  }
-
-  @Get(':id')
-  async findOne(@Param('id') id: string): Promise<ImageMetadata> { // Changed type to string
-    return this.imageMetadataService.findOne(id);
-  }
-
-  @Delete(':id')
-  @HttpCode(HttpStatus.NO_CONTENT)
-  async delete(@Param('id') id: string): Promise<void> { // Changed type to string and return type to void
-    await this.imageMetadataService.delete(id);
+    try {
+      this.logger.debug('Processing metadata upload request');
+      const result = await this.imagesService.createMany(images);
+      
+      this.logger.debug('Metadata upload successful');
+      return { 
+        message: 'Image metadata uploaded successfully',
+        data: result 
+      };
+    } catch (error: any) {
+      this.logger.error('Failed to upload metadata', error.stack);
+      throw new BadRequestException(
+        error.message || 'Failed to upload image metadata'
+      );
+    }
   }
 }

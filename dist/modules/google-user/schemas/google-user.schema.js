@@ -23,25 +23,13 @@ __decorate([
     __metadata("design:type", String)
 ], GoogleUser.prototype, "email", void 0);
 __decorate([
-    (0, mongoose_1.Prop)({ required: true }),
+    (0, mongoose_1.Prop)(),
     __metadata("design:type", String)
-], GoogleUser.prototype, "displayName", void 0);
+], GoogleUser.prototype, "name", void 0);
 __decorate([
     (0, mongoose_1.Prop)(),
     __metadata("design:type", String)
-], GoogleUser.prototype, "firstName", void 0);
-__decorate([
-    (0, mongoose_1.Prop)(),
-    __metadata("design:type", String)
-], GoogleUser.prototype, "lastName", void 0);
-__decorate([
-    (0, mongoose_1.Prop)(),
-    __metadata("design:type", String)
-], GoogleUser.prototype, "photo", void 0);
-__decorate([
-    (0, mongoose_1.Prop)(),
-    __metadata("design:type", String)
-], GoogleUser.prototype, "accessToken", void 0);
+], GoogleUser.prototype, "avatarUrl", void 0);
 exports.GoogleUser = GoogleUser = __decorate([
     (0, mongoose_1.Schema)({ timestamps: true })
 ], GoogleUser);

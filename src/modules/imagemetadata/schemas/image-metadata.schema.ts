@@ -1,26 +1,30 @@
-// src/modules/image-metadata/schemas/image-metadata.schema.ts
+// src/modules/image-metadata/schemas/imagedata.schema.ts
 
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
+import { IsString, IsUrl, IsOptional, IsNumber, IsDateString } from 'class-validator';
 
-export type ImageMetadataDocument = ImageMetadata & Document;
+export type ImageDataDocument = ImageData & Document;
 
 @Schema({ timestamps: true })
-export class ImageMetadata {
-  @Prop({ required: false })
+export class ImageData {
+  @Prop()
   latitude: number | null;
 
-  @Prop({ required: false })
+  @Prop()
   longitude: number | null;
 
-  @Prop({ required: false })
+  @Prop()
   taken_at: string | null;
 
-  @Prop({ required: true })
+  @Prop({ required: true, unique:true })
   image_url: string;
 
-  @Prop({ required: true, unique: true })
+  @Prop({ required: true,unique :true})
   image_id: string;
+
+  // @Prop()
+  // __v: number;
 }
 
-export const ImageMetadataSchema = SchemaFactory.createForClass(ImageMetadata);
+export const ImageDataSchema = SchemaFactory.createForClass(ImageData);

@@ -4,4 +4,5 @@ export declare class CreateTripDto {
     end_date: string | Date;
     image_urls?: string[];
     member_google_ids?: string[];
+    created_by: string;
 }

@@ -11,18 +11,18 @@ const common_1 = require("@nestjs/common");
 const mongoose_1 = require("@nestjs/mongoose");
 const google_user_schema_1 = require("./schemas/google-user.schema");
 const google_user_service_1 = require("./google-user.service");
-const google_user_controller_1 = require("./google-user.controller");
 let GoogleUserModule = class GoogleUserModule {
 };
 exports.GoogleUserModule = GoogleUserModule;
 exports.GoogleUserModule = GoogleUserModule = __decorate([
     (0, common_1.Module)({
         imports: [
-            mongoose_1.MongooseModule.forFeature([{ name: google_user_schema_1.GoogleUser.name, schema: google_user_schema_1.GoogleUserSchema }]),
+            mongoose_1.MongooseModule.forFeature([
+                { name: google_user_schema_1.GoogleUser.name, schema: google_user_schema_1.GoogleUserSchema },
+            ]),
         ],
         providers: [google_user_service_1.GoogleUserService],
-        controllers: [google_user_controller_1.GoogleUserController],
-        exports: [google_user_service_1.GoogleUserService],
+        exports: [google_user_service_1.GoogleUserService, mongoose_1.MongooseModule],
     })
 ], GoogleUserModule);
 //# sourceMappingURL=google-user.module.js.map

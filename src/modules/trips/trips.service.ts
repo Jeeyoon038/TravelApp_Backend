@@ -1,4 +1,3 @@
-// src/modules/trips/trips.service.ts
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
@@ -8,8 +7,10 @@ import { GoogleUserService } from '../google-user/google-user.service';
 
 @Injectable()
 export class TripsService {
-  [x: string]: any;
-  constructor(@InjectModel(Trip.name) private tripModel: Model<TripDocument>) {}
+  constructor(
+    @InjectModel(Trip.name) private tripModel: Model<TripDocument>,
+    private readonly googleUserService: GoogleUserService
+  ) {}
 
   async create(createTripDto: CreateTripDto): Promise<Trip> {
     const tripData = {
@@ -35,7 +36,7 @@ export class TripsService {
   }
   
   async addMember(tripId: string, googleEmail: string): Promise<Trip> {
-    const googleUser = await this.GoogleUserService.findByEmail(googleEmail);
+    const googleUser = await this.googleUserService.findByEmail(googleEmail);
     const trip = await this.tripModel.findById(tripId).exec();
     if (!trip) {
       throw new NotFoundException(`Trip with ID ${tripId} not found`);
@@ -50,7 +51,7 @@ export class TripsService {
 
     return trip;
   }
-  //ID로 특정 여행 데이터 가져오기기
+
   async findOne(trip_id: number): Promise<Trip> {
     return this.tripModel.findOne({ trip_id }).exec();
   }

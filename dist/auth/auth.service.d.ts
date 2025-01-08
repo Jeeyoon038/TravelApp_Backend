@@ -1,14 +1,16 @@
 import { Model } from 'mongoose';
-import { GoogleUser, GoogleUserDocument } from '../modules/google-user/schemas/google-user.schema';
+import { JwtService } from '@nestjs/jwt';
+import { GoogleUserDocument } from '../modules/google-user/schemas/google-user.schema';
 export declare class AuthService {
-    private readonly googleUserModel;
-    constructor(googleUserModel: Model<GoogleUserDocument>);
-    googleLogin(googleUser: GoogleUser): Promise<{
-        user: {
-            googleId: string;
-            email: string;
-            name: string;
-            photo: string;
-        };
+    private googleUserModel;
+    private readonly jwtService;
+    constructor(googleUserModel: Model<GoogleUserDocument>, jwtService: JwtService);
+    googleLogin(user: {
+        googleId: string;
+        email: string;
+        name: string;
+        avatarUrl: string;
+    }): Promise<{
+        accessToken: string;
     }>;
 }

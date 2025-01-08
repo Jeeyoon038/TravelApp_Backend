@@ -1,11 +1,13 @@
 import { ImagesService } from './image-metadata.service';
 import { CreateImageMetadataDto } from './dto/create-image-metadata.dto';
-import { ImageMetadata } from './schemas/image-metadata.schema';
+import { JwtService } from '@nestjs/jwt';
 export declare class ImageMetadataController {
-    private readonly imageMetadataService;
-    constructor(imageMetadataService: ImagesService);
-    create(createImageMetadataDto: CreateImageMetadataDto): Promise<ImageMetadata>;
-    findAll(): Promise<ImageMetadata[]>;
-    findOne(id: string): Promise<ImageMetadata>;
-    delete(id: string): Promise<void>;
+    private readonly imagesService;
+    private readonly jwtService;
+    private readonly logger;
+    constructor(imagesService: ImagesService, jwtService: JwtService);
+    uploadMetadata(images: CreateImageMetadataDto[]): Promise<{
+        message: string;
+        data: import("./schemas/image-metadata.schema").ImageData[];
+    }>;
 }

@@ -1,5 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document, Model } from 'mongoose';  // Add Model import
+import { Document, Model } from 'mongoose';
 
 export type TripDocument = Trip & Document;
 
@@ -17,12 +17,14 @@ export class Trip {
   @Prop({ required: true, type: Date })
   end_date: Date;
 
-  @Prop({ type: [String], default: [] })  // 이미지 URL 배열
+  @Prop({ type: [String], default: [] })
   image_urls: string[];
 
-  @Prop({ type: [String], default: [] })  // 멤버들의 Google ID 배열
+  @Prop({ type: [String], default: [] })
   member_google_ids: string[];
 
+  @Prop({ required: true, type: String })
+  created_by: string;
 }
 
 export const TripSchema = SchemaFactory.createForClass(Trip);
@@ -30,7 +32,7 @@ export const TripSchema = SchemaFactory.createForClass(Trip);
 // Auto-increment setup for trip_id
 TripSchema.pre('save', async function(next) {
     if (this.isNew) {
-      const Trip = this.constructor as Model<TripDocument>;  // Add proper typing
+      const Trip = this.constructor as Model<TripDocument>;
       const lastTrip = await Trip.findOne().sort({ trip_id: -1 });
       this.trip_id = lastTrip ? lastTrip.trip_id + 1 : 1;
     }
