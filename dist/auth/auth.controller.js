@@ -15,9 +15,16 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.AuthController = void 0;
 const common_1 = require("@nestjs/common");
 const auth_service_1 = require("./auth.service");
+const create_google_user_dto_1 = require("../modules/google-user/dto/create-google-user.dto");
 let AuthController = class AuthController {
     constructor(authService) {
         this.authService = authService;
+    }
+    async googleCallback(createGoogleUserDto) {
+        if (!createGoogleUserDto.googleId || !createGoogleUserDto.email) {
+            throw new common_1.BadRequestException('Google ID and email are required');
+        }
+        return this.authService.createOrUpdateGoogleUser(createGoogleUserDto);
     }
     async googleLogin(googleId, email, name, avatarUrl) {
         if (!googleId || !email) {
@@ -27,6 +34,13 @@ let AuthController = class AuthController {
     }
 };
 exports.AuthController = AuthController;
+__decorate([
+    (0, common_1.Post)('google/callback'),
+    __param(0, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [create_google_user_dto_1.CreateGoogleUserDto]),
+    __metadata("design:returntype", Promise)
+], AuthController.prototype, "googleCallback", null);
 __decorate([
     (0, common_1.Get)('google-login'),
     __param(0, (0, common_1.Query)('googleId')),

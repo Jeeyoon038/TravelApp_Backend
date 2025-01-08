@@ -55,4 +55,13 @@ export class TripsService {
   async findOne(trip_id: number): Promise<Trip> {
     return this.tripModel.findOne({ trip_id }).exec();
   }
+
+   /**
+   * 현재 사용자가 포함된 여행 기록 가져오기
+   * @param userId 구글 사용자 ID
+   */
+   async findByUser(userId: string): Promise<Trip[]> {
+    return this.tripModel.find({ created_by: userId }).exec();
+  }
+
 }

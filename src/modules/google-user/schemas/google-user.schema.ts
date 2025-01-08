@@ -1,5 +1,3 @@
-// src/modules/google-user/schemas/google-user.schema.ts
-
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
 
@@ -16,8 +14,8 @@ export class GoogleUser {
   @Prop()
   name: string;
 
-  @Prop()
-  avatarUrl: string;
+  @Prop() // Field name changed to match DTO
+  photo: string;
 }
 
 export const GoogleUserSchema = SchemaFactory.createForClass(GoogleUser);

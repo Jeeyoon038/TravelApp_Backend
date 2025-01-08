@@ -62,6 +62,9 @@ let TripsService = class TripsService {
     async findOne(trip_id) {
         return this.tripModel.findOne({ trip_id }).exec();
     }
+    async findByUser(userId) {
+        return this.tripModel.find({ created_by: userId }).exec();
+    }
 };
 exports.TripsService = TripsService;
 exports.TripsService = TripsService = __decorate([

@@ -4,7 +4,7 @@ export declare class GoogleUser {
     googleId: string;
     email: string;
     name: string;
-    avatarUrl: string;
+    photo: string;
 }
 export declare const GoogleUserSchema: import("mongoose").Schema<GoogleUser, import("mongoose").Model<GoogleUser, any, any, any, Document<unknown, any, GoogleUser> & GoogleUser & {
     _id: import("mongoose").Types.ObjectId;

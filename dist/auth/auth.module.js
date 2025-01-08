@@ -19,6 +19,7 @@ exports.AuthModule = AuthModule;
 exports.AuthModule = AuthModule = __decorate([
     (0, common_1.Module)({
         imports: [
+            google_user_module_1.GoogleUserModule,
             config_1.ConfigModule,
             google_user_module_1.GoogleUserModule,
             jwt_1.JwtModule.registerAsync({

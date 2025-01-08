@@ -14,4 +14,5 @@ export declare class TripsService {
     })[]>;
     addMember(tripId: string, googleEmail: string): Promise<Trip>;
     findOne(trip_id: number): Promise<Trip>;
+    findByUser(userId: string): Promise<Trip[]>;
 }

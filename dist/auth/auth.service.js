@@ -18,10 +18,18 @@ const mongoose_1 = require("@nestjs/mongoose");
 const mongoose_2 = require("mongoose");
 const jwt_1 = require("@nestjs/jwt");
 const google_user_schema_1 = require("../modules/google-user/schemas/google-user.schema");
+const google_user_service_1 = require("../modules/google-user/google-user.service");
 let AuthService = class AuthService {
-    constructor(googleUserModel, jwtService) {
+    createOrUpdateGoogleUser(createGoogleUserDto) {
+        throw new Error('Method not implemented.');
+    }
+    constructor(googleUserModel, jwtService, googleUserService) {
         this.googleUserModel = googleUserModel;
         this.jwtService = jwtService;
+        this.googleUserService = googleUserService;
+    }
+    async handleGoogleUser(googleId, email, displayName, photo) {
+        return this.googleUserService.createOrUpdateGoogleUser(googleId, email, displayName, photo);
     }
     async googleLogin(user) {
         let existingUser = await this.googleUserModel.findOne({ googleId: user.googleId }).exec();
@@ -43,6 +51,7 @@ exports.AuthService = AuthService = __decorate([
     (0, common_1.Injectable)(),
     __param(0, (0, mongoose_1.InjectModel)(google_user_schema_1.GoogleUser.name)),
     __metadata("design:paramtypes", [mongoose_2.Model,
-        jwt_1.JwtService])
+        jwt_1.JwtService,
+        google_user_service_1.GoogleUserService])
 ], AuthService);
 //# sourceMappingURL=auth.service.js.map

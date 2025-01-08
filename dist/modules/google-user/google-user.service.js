@@ -22,23 +22,32 @@ let GoogleUserService = class GoogleUserService {
         this.googleUserModel = googleUserModel;
     }
     async findByEmail(email) {
-        const user = await this.googleUserModel.findOne({ email }).exec();
-        if (!user) {
-            throw new common_1.NotFoundException(`GoogleUser with email ${email} not found`);
-        }
-        return user;
+        return this.googleUserModel.findOne({ email }).exec();
     }
-    async create(email, googleId, displayName, firstName, lastName, photo, accessToken) {
+    async create(email, googleId, displayName, firstName, lastName, photo) {
         const createdUser = new this.googleUserModel({
             googleId,
             email,
-            displayName,
-            firstName,
-            lastName,
-            photo,
-            accessToken,
+            name: displayName,
+            avatarUrl: photo,
         });
         return createdUser.save();
+    }
+    async createOrUpdateGoogleUser(googleId, email, displayName, photo) {
+        const existingUser = await this.googleUserModel.findOne({ googleId }).exec();
+        if (existingUser) {
+            existingUser.email = email;
+            existingUser.name = displayName;
+            existingUser.photo = photo || existingUser.photo;
+            return existingUser.save();
+        }
+        const newUser = new this.googleUserModel({
+            googleId,
+            email,
+            name: displayName,
+            photo,
+        });
+        return newUser.save();
     }
 };
 exports.GoogleUserService = GoogleUserService;

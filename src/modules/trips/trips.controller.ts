@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Param, Delete, Put, UseInterceptors, UploadedFiles, Patch } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Delete, Put, UseInterceptors, UploadedFiles, Patch, Query } from '@nestjs/common';
 import { TripsService } from './trips.service';
 import { CreateTripDto } from './dto/create-trip.dto';
 import { Trip } from './schemas/trip.schema';
@@ -24,6 +24,20 @@ export class TripsController {
       throw error;
     }
   }
+
+
+  /**
+   * 사용자 ID를 기준으로 여행 기록 가져오기
+   * @param userId 구글 사용자 ID
+   */
+  @Get()
+  async getTripsByUser(@Query('userId') userId: string): Promise<Trip[]> {
+    if (!userId) {
+      throw new Error('userId is required');
+    }
+    return this.tripsService.findByUser(userId);
+  }
+
 
   @Get('test')
   test() {

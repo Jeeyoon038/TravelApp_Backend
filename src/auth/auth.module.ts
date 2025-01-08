@@ -9,6 +9,7 @@ import { GoogleUserModule } from '../modules/google-user/google-user.module';
 
 @Module({
   imports: [
+    GoogleUserModule,
     ConfigModule, // Ensure ConfigModule is imported for environment variables
     GoogleUserModule, // Import GoogleUserModule for GoogleUserService
     JwtModule.registerAsync({

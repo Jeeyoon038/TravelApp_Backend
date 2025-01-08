@@ -33,6 +33,12 @@ let TripsController = class TripsController {
             throw error;
         }
     }
+    async getTripsByUser(userId) {
+        if (!userId) {
+            throw new Error('userId is required');
+        }
+        return this.tripsService.findByUser(userId);
+    }
     test() {
         console.log('Test endpoint hit');
         return { message: 'Trips endpoint is working' };
@@ -56,6 +62,13 @@ __decorate([
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", Promise)
 ], TripsController.prototype, "findAll", null);
+__decorate([
+    (0, common_1.Get)(),
+    __param(0, (0, common_1.Query)('userId')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String]),
+    __metadata("design:returntype", Promise)
+], TripsController.prototype, "getTripsByUser", null);
 __decorate([
     (0, common_1.Get)('test'),
     __metadata("design:type", Function),

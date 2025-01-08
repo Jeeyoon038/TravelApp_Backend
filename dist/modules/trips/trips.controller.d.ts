@@ -9,6 +9,7 @@ export declare class TripsController {
     }> & {
         __v: number;
     })[]>;
+    getTripsByUser(userId: string): Promise<Trip[]>;
     test(): {
         message: string;
     };

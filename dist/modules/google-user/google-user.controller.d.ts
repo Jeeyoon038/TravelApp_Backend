@@ -6,10 +6,7 @@ export declare class GoogleUserController {
         email: string;
         googleId: string;
         displayName: string;
-        firstName?: string;
-        lastName?: string;
         photo?: string;
-        accessToken?: string;
     }): Promise<import("./schemas/google-user.schema").GoogleUser>;
     findByEmail(email: string): Promise<import("./schemas/google-user.schema").GoogleUser>;
 }

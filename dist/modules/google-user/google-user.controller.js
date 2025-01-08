@@ -20,8 +20,8 @@ let GoogleUserController = class GoogleUserController {
         this.googleUserService = googleUserService;
     }
     async create(body) {
-        const { email, googleId, displayName, firstName, lastName, photo, accessToken, } = body;
-        return this.googleUserService.create(email, googleId, displayName, firstName, lastName, photo, accessToken);
+        const { email, googleId, displayName, photo, } = body;
+        return this.googleUserService.create(email, googleId, displayName, photo);
     }
     async findByEmail(email) {
         console.log('email:', email);

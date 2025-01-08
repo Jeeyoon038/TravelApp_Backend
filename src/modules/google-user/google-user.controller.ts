@@ -1,4 +1,3 @@
-// src/modules/google-user/google-user.controller.ts
 import { Controller, Post, Body, Get, Param } from '@nestjs/common';
 import { GoogleUserService } from './google-user.service';
 
@@ -13,30 +12,21 @@ export class GoogleUserController {
       email: string;
       googleId: string;
       displayName: string;
-      firstName?: string;
-      lastName?: string;
-      photo?: string;
-      accessToken?: string;
-    },
+      photo?: string; // Field name changed to match schema
+    }, 
   ) {
     const {
       email,
       googleId,
       displayName,
-      firstName,
-      lastName,
-      photo,
-      accessToken,
+      photo, // Match schema field name
     } = body;
 
     return this.googleUserService.create(
       email,
       googleId,
       displayName,
-      firstName,
-      lastName,
-      photo,
-      accessToken,
+      photo, // Pass as avatarUrl
     );
   }
 

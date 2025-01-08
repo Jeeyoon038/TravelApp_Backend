@@ -29,7 +29,7 @@ __decorate([
 __decorate([
     (0, mongoose_1.Prop)(),
     __metadata("design:type", String)
-], GoogleUser.prototype, "avatarUrl", void 0);
+], GoogleUser.prototype, "photo", void 0);
 exports.GoogleUser = GoogleUser = __decorate([
     (0, mongoose_1.Schema)({ timestamps: true })
 ], GoogleUser);
